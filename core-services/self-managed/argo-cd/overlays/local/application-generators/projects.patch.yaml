@@ -11,4 +11,4 @@ spec:
     namespace: argocd
   source:
     path: apps/projects
-    repoURL: https://github.com/kalmalyzer/k8s-onprem-cluster.git
+    repoURL: https://github.com/kalmalyzer/managed-cluster.git

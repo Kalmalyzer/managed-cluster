@@ -14,4 +14,4 @@ spec:
   # Fetch resources for the Application from this Git repo
   source:
     path: core-services/self-managed/argo-cd/overlays/local
-    repoURL: https://github.com/kalmalyzer/k8s-onprem-cluster.git
+    repoURL: https://github.com/kalmalyzer/managed-cluster.git

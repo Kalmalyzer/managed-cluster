@@ -12,4 +12,4 @@ spec:
 
   source:
     path: apps/applications
-    repoURL: https://github.com/kalmalyzer/k8s-onprem-cluster.git
+    repoURL: https://github.com/kalmalyzer/managed-cluster.git

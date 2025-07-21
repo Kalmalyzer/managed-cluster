@@ -8,7 +8,7 @@ metadata:
 spec:
   sourceRepos:
     # Only allow fetching configuration from the primary Git repo
-    - https://github.com/kalmalyzer/k8s-onprem-cluster.git
+    - https://github.com/kalmalyzer/managed-cluster.git
 
   destinations:
     # Only allow deploying to the 'argocd' namespace within the cluster
