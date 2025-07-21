@@ -1,0 +1,16 @@
+# This introduces a Project that is only intended to be used by Applications that control ArgoCD itself
+
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: argocd
+  namespace: argocd
+spec:
+  sourceRepos:
+    # Only allow fetching configuration from the primary Git repo
+    - https://github.com/kalmalyzer/k8s-onprem-cluster.git
+
+  destinations:
+    # Only allow deploying to the 'argocd' namespace within the cluster
+    - name: talos-default
+      namespace: argocd

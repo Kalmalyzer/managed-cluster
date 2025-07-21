@@ -1,0 +1,34 @@
+# This Application ensures that all Applications within /apps/applications get created
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  creationTimestamp: null
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  labels:
+    app.kubernetes.io/name: applications
+  name: applications
+  namespace: argocd
+spec:
+  # OVERRIDE PER-ENVIRONMENT
+  destination:
+    name: <cluster name>
+    namespace: argocd
+  ignoreDifferences:
+    - group: argoproj.io
+      jsonPointers:
+        - /status
+      kind: Application
+  project: argocd
+  # OVERRIDE PER-ENVIRONMENT
+  source:
+    path: apps/applications
+    repoURL: <Git repository URL>
+  syncPolicy:
+    automated:
+      allowEmpty: true
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - allowEmpty=true

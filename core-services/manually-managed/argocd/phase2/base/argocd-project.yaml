@@ -1,0 +1,20 @@
+# This introduces a Project that is only intended to be used by Applications that control ArgoCD itself
+
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: argocd
+  namespace: argocd
+spec:
+  description: ArgoCD project
+
+  # OVERRIDE PER-ENVIRONMENT
+  sourceRepos:
+  # Only allow fetching configuration from the primary Git repo
+    - <Git repository URL>
+
+  # OVERRIDE PER-ENVIRONMENT
+  destinations:
+    # Only allow deploying to the 'argocd' namespace within the cluster
+    - name: <cluster name>
+      namespace: argocd

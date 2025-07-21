@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+data:
+  # Use annotations to track resource ownership, rather than labels
+  # Other tools (and other Helm charts) sometimes use the labels for their own purposes
+  # Using the argocd.argoproj.io/tracking-id avoids clashes with those tools/charts
+  # Reference: https://argo-cd.readthedocs.io/en/stable/user-guide/resource_tracking/#additional-tracking-methods-via-an-annotation
+  # Reference: https://argo-cd.readthedocs.io/en/stable/user-guide/resource_tracking/#choosing-a-tracking-method
+  application.resourceTrackingMethod: annotation

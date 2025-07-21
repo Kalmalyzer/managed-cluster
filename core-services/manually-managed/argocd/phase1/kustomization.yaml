@@ -1,0 +1,88 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  # Install ArgoCD CRDs, ClusterRoles and ClusterRoleBindings (that is what remains after the patches below)
+  - https://raw.githubusercontent.com/argoproj/argo-cd/v2.12.2/manifests/install.yaml
+
+patches:
+  # Remove any ServiceAccount, as these should be part of the 'argocd' deployment itself
+  - target:
+      kind: ServiceAccount
+    patch: |-
+      kind: ServiceAccount
+      metadata:
+        name: does-not-matter
+      $patch: delete
+
+  # Remove any Role, as these should be part of the 'argocd' deployment itself
+  - target:
+      kind: Role
+    patch: |-
+      kind: Role
+      metadata:
+        name: does-not-matter
+      $patch: delete
+
+  # Remove any RoleBinding, as these should be part of the 'argocd' deployment itself
+  - target:
+      kind: RoleBinding
+    patch: |-
+      kind: RoleBinding
+      metadata:
+        name: does-not-matter
+      $patch: delete
+
+  # Remove any ConfigMap, as these should be part of the 'argocd' deployment itself
+  - target:
+      kind: ConfigMap
+    patch: |-
+      kind: ConfigMap
+      metadata:
+        name: does-not-matter
+      $patch: delete
+
+  # Remove any Secret, as these should be part of the 'argocd' deployment itself
+  - target:
+      kind: Secret
+    patch: |-
+      kind: Secret
+      metadata:
+        name: does-not-matter
+      $patch: delete
+
+  # Remove any Service, as these should be part of the 'argocd' deployment itself
+  - target:
+      kind: Service
+    patch: |-
+      kind: Service
+      metadata:
+        name: does-not-matter
+      $patch: delete
+
+  # Remove any Deployment, as these should be part of the 'argocd' deployment itself
+  - target:
+      kind: Deployment
+    patch: |-
+      kind: Deployment
+      metadata:
+        name: does-not-matter
+      $patch: delete
+
+  # Remove any StatefulSet, as these should be part of the 'argocd' deployment itself
+  - target:
+      kind: StatefulSet
+    patch: |-
+      kind: StatefulSet
+      metadata:
+        name: does-not-matter
+      $patch: delete
+
+  # Remove any NetworkPolicy, as these should be part of the 'argocd' deployment itself
+  - target:
+      kind: NetworkPolicy
+    patch: |-
+      kind: NetworkPolicy
+      metadata:
+        name: does-not-matter
+      $patch: delete

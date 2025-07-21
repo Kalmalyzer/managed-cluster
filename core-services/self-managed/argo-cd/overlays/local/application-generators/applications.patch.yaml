@@ -1,0 +1,15 @@
+# This Application ensures that all Applications within /apps/applications get created
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: applications
+  namespace: argocd
+spec:
+  destination:
+    name: talos-default
+    namespace: argocd
+
+  source:
+    path: apps/applications
+    repoURL: https://github.com/kalmalyzer/k8s-onprem-cluster.git

@@ -1,0 +1,3 @@
+local:
+  kubectlContextName: admin@talos-default
+  clusterName: talos-default
