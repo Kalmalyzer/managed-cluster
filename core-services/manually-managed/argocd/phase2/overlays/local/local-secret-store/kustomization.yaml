@@ -1,0 +1,9 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+  - local-secret-store.yaml
+  - local-secret-store-cluster-role.yaml
+  - local-secret-store-cluster-role-binding.yaml
+  - local-secret-store-namespace.yaml
+  - local-secret-store-service-account.yaml

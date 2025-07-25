@@ -18,3 +18,11 @@ kubectl get nodes -o wide
 talosctl config node 10.5.0.2
 ```
 
+
+# Local secrets
+
+For local testing, create the following secrets in your local store:
+
+argocd
+  argocd-github-app-private-key: ...
+  argocd-github-webhook-secret: ...

@@ -4,6 +4,10 @@ kind: Kustomization
 resources:
   - ../../base
 
+  # Allow other programs to create ExternalSecrets that reference the
+  # 'local-secret-store' ClusterSecretStore within the 'local-secret-store' namespace
+  - local-secret-store
+
 patches:
   - path: argo-cd-application.patch.yaml
   - path: argocd-project.patch.yaml
