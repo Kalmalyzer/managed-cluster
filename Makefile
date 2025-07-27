@@ -1,7 +1,7 @@
 .PHONY: validate validate-apps validate-apps-config
-.PHONY: install-core-services install-core-services-bootstrap install-core-services-configuration delete-default-project
+.PHONY: install-core-services delete-default-project
 .PHONY: restart-argocd-server restart-argocd-application-controller restart-argocd-dex-server
-.PHONY: port-forward local-argocd-server get-admin-password
+.PHONY: install-local-secret-store port-forward-argocd-server get-admin-password
 
 # Check if ENV is set and valid
 ifeq ($(strip $(ENV)),)
@@ -90,5 +90,10 @@ get-admin-password:
 	kubectl config use-context $(KUBECTL_CONTEXT_NAME)
 	kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
 
-port-forward-local-argocd:
+install-local-secret-store:
+	kubectl config use-context $(KUBECTL_CONTEXT_NAME)
+	kubectl apply -k apps/local-secret-store
+
+port-forward-argocd-server:
+	kubectl config use-context $(KUBECTL_CONTEXT_NAME)
 	kubectl port-forward services/argocd-server 8000:80 -n argocd
