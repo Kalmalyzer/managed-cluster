@@ -1,6 +1,8 @@
 
 # Quick setup
 
+## Create a local, Docker-based cluster
+
 ```
 brew install siderolabs/tap/talosctl
 
@@ -18,11 +20,20 @@ kubectl get nodes -o wide
 talosctl config node 10.5.0.2
 ```
 
+## Install core services (External Secrets Operator + ArgoCD) on cluster
 
-# Local secrets
+```
+make install-core-services
+make delete-default-project
+install-local-secret-store
+```
+
+## Create secrets used for local testing
 
 For local testing, create the following secrets in your local store:
 
+```
 argocd
   argocd-github-app-private-key: ...
-  argocd-github-webhook-secret: ...
+  argocd-github-webhook-secret: NOT_USED
+```
