@@ -6,7 +6,7 @@ metadata:
 spec:
   destination:
     name: talos-default
-    namespace: argocd
+    namespace: cert-manager
 
   source:
     path: apps/cert-manager
