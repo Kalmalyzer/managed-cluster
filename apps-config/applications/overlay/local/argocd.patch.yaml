@@ -9,5 +9,5 @@ spec:
     namespace: argocd
 
   source:
-    path: apps/argocd/overlays/loocal
+    path: apps/argocd/overlays/local
     repoURL: https://github.com/kalmalyzer/managed-cluster.git
