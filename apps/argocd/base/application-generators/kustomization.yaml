@@ -3,10 +3,14 @@ kind: Kustomization
 namespace: argocd
 
 resources:
-  # Create 'applications' application
-  # This manages creation of second-level Applications
-  - applications.yaml
+  # Create 'application-generators' project
+  # This allows the projects below to run
+  - application-generators.yaml
 
-  # Create 'projects' application
+  # Create 'argocd-applications' application
+  # This manages creation of second-level Applications
+  - argocd-applications.yaml
+
+  # Create 'argocd-projects' application
   # This manages creation of second-level Projects
-  - projects.yaml
+  - argocd-projects.yaml

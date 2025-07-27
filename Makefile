@@ -69,8 +69,6 @@ install-core-services:
 	kubectl apply -k apps/argocd/crds
 	kubectl wait --for condition=established --timeout=120s crd/applications.argoproj.io crd/applicationsets.argoproj.io crd/appprojects.argoproj.io
 	kubectl apply -k apps/argocd/overlays/${ENV}
-	kubectl apply -k apps-config/projects/overlays/${ENV}
-	kubectl apply -k apps-config/apps/overlays/${ENV}
 
 delete-default-project:
 	kubectl config use-context $(KUBECTL_CONTEXT_NAME)

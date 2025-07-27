@@ -8,8 +8,9 @@ resources:
   - secrets
 
 patches:
-  - path: application-generators/applications.patch.yaml
-  - path: application-generators/projects.patch.yaml
+  - path: application-generators/application-generators.patch.yaml
+  - path: application-generators/argocd-applications.patch.yaml
+  - path: application-generators/argocd-projects.patch.yaml
 
   # Patches for argocd-cm ConfigMap
   - path: argocd-cm/set-url.patch.yaml
