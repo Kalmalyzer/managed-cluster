@@ -1,15 +1,9 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: argocd
 
 resources:
   # Install ArgoCD application
   - https://raw.githubusercontent.com/argoproj/argo-cd/v2.12.2/manifests/install.yaml
-
-  # Create Applications which generate other Aplications/Projects
-  - application-generators
-
-  - global-project
 
 patches:
   # Remove any CustomResourceDefinitions, as these live outside the 'argocd' namespace
@@ -38,14 +32,3 @@ patches:
       metadata:
         name: does-not-matter
       $patch: delete
-
-  # Patches for argocd-cm ConfigMap
-  - path: argocd-cm/apply-global-project-to-all-projects.patch.yaml
-  - path: argocd-cm/enable-helm-with-kustomize.patch.yaml
-  - path: argocd-cm/track-resources-using-annotation.patch.yaml
-
-  # Patches for argocd-cmd-params-cm ConfigMap
-  - path: argocd-cmd-params-cm/disable-http-to-https-redirection.patch.yaml
-
-  # Patches for argocd-rbac-cm ConfigMap
-  - path: argocd-rbac-cm/grant-all-users-admin-privileges.patch.yaml

@@ -3,10 +3,10 @@
 apiVersion: argoproj.io/v1alpha1
 kind: AppProject
 metadata:
-  name: global
+  name: argocd
   namespace: argocd
 spec:
-  description: Global project - all projects will inherit settings from this one
+  description: ArgoCD project
 
   # OVERRIDE PER-ENVIRONMENT
   sourceRepos:
@@ -18,3 +18,14 @@ spec:
     # Only allow deploying to the 'argocd' namespace within the cluster
     - name: <cluster name>
       namespace: argocd
+
+  # Provide a shortlist of cluster-scope resources that are allowed; by default, none are allowed
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: CustomResourceDefinition
+    - group: "*"
+      kind: ClusterRole
+    - group: "*"
+      kind: ClusterRoleBinding
+    - group: "*"
+      kind: Namespace

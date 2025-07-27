@@ -1,7 +1,7 @@
-.PHONY: validate
-.PHONY: install-core-services-manually-managed install-core-services-self-managed delete-default-project
+.PHONY: validate validate-apps validate-apps-config
+.PHONY: install-core-services install-core-services-bootstrap install-core-services-configuration delete-default-project
 .PHONY: restart-argocd-server restart-argocd-application-controller restart-argocd-dex-server
-.PHONY: get-admin-password
+.PHONY: port-forward local-argocd-server get-admin-password
 
 # Check if ENV is set and valid
 ifeq ($(strip $(ENV)),)
@@ -17,25 +17,58 @@ endif
 KUBECTL_CONTEXT_NAME:=$(shell yq .${ENV}.kubectlContextName < environments.yaml)
 CLUSTER_NAME:=$(shell yq .${ENV}.clusterName < environments.yaml)
 
-# Validation of all kustomizations & terraform logic
+validate: validate-apps validate-apps-config
 
-validate:
-	kubectl kustomize core-services/manually-managed/argocd/phase1 >/dev/null
-	kubectl kustomize core-services/manually-managed/argocd/phase2/overlays/${ENV} >/dev/null
-	kubectl kustomize core-services/manually-managed/external-secrets >/dev/null
-	kubectl kustomize core-services/self-managed/argo-cd/overlays/${ENV} >/dev/null
+# Find and validate all root kustomization.yaml files in apps folder
+# This finds kustomization.yaml files at any depth, but ignores nested ones
+# when a parent directory already has a kustomization.yaml file
+validate-apps:
+	@echo "Validating kustomization.yaml files in apps folder..."
+	@find apps -name "kustomization.yaml" -type f | while read file; do \
+		dir=$$(dirname $$(dirname "$$file")); \
+		parent_has_kustomization=false; \
+		while [ "$$dir" != "apps" ] && [ "$$dir" != "." ]; do \
+			if [ -f "$$dir/kustomization.yaml" ]; then \
+				parent_has_kustomization=true; \
+				break; \
+			fi; \
+			dir=$$(dirname "$$dir"); \
+		done; \
+		if [ "$$parent_has_kustomization" = "false" ]; then \
+			echo "Validating: $$file"; \
+			kubectl kustomize "$$(dirname "$$file")" >/dev/null; \
+		fi; \
+	done
+
+# Find and validate all root kustomization.yaml files in apps-config folder
+# This finds kustomization.yaml files at any depth, but ignores nested ones
+# when a parent directory already has a kustomization.yaml file
+validate-apps-config:
+	@echo "Validating kustomization.yaml files in apps-config folder..."
+	@find apps-config -name "kustomization.yaml" -type f | while read file; do \
+		dir=$$(dirname $$(dirname "$$file")); \
+		parent_has_kustomization=false; \
+		while [ "$$dir" != "apps-config" ] && [ "$$dir" != "." ]; do \
+			if [ -f "$$dir/kustomization.yaml" ]; then \
+				parent_has_kustomization=true; \
+				break; \
+			fi; \
+			dir=$$(dirname "$$dir"); \
+		done; \
+		if [ "$$parent_has_kustomization" = "false" ]; then \
+			echo "Validating: $$file"; \
+			kubectl kustomize "$$(dirname "$$file")" >/dev/null; \
+		fi; \
+	done
 
 # Management operations for cluster
 
-install-core-services-manually-managed:
+install-core-services:
 	kubectl config use-context $(KUBECTL_CONTEXT_NAME)
-	kubectl apply -k core-services/manually-managed/argocd/phase1
-	kubectl apply -k core-services/manually-managed/argocd/phase2/overlays/${ENV}
-	kubectl apply -k core-services/manually-managed/external-secrets
-
-install-core-services-self-managed:
-	kubectl config use-context $(KUBECTL_CONTEXT_NAME)
-	kubectl apply -k core-services/self-managed/argo-cd/overlays/${ENV}
+	kubectl apply -k apps/argocd/crds
+	kubectl wait --for condition=established --timeout=120s crd/applications.argoproj.io crd/applicationsets.argoproj.io crd/appprojects.argoproj.io
+	kubectl apply -k apps/argocd/overlays/${ENV}
+	kubectl apply -k apps/external-secrets
 
 delete-default-project:
 	kubectl config use-context $(KUBECTL_CONTEXT_NAME)
@@ -56,3 +89,6 @@ restart-argocd-dex-server:
 get-admin-password:
 	kubectl config use-context $(KUBECTL_CONTEXT_NAME)
 	kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
+
+port-forward-local-argocd:
+	kubectl port-forward services/argocd-server 8000:80 -n argocd
