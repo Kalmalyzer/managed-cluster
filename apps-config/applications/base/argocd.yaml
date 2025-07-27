@@ -34,13 +34,6 @@ spec:
     path: <app path within Git repository>
     repoURL: <Git repository URL>
 
-    # Set these labels/annotations on the application namespace
-    # Reference: https://argocd.readthedocs.io/en/stable/user-guide/sync-options/#namespace-metadata
-    managedNamespaceMetadata:
-      labels:
-        # Allow HTTPRoutes in this namespace to attach to the 'apps' shared gateway in the 'cluster-resources' namespace
-        shared-gateway-access: "true"
-
   syncPolicy:
     automated:
       # Allow automated sync to delete resources, if thre are resources in the cluster but the Git repo is completely empty
@@ -54,3 +47,11 @@ spec:
       # Allow automated syncs to be triggered by changes to the live cluster (this makes the application self-healing)
       # Reference: https://argo-cd.readthedocs.io/en/stable/user-guide/auto_sync/#automatic-self-healing
       selfHeal: true
+
+    # Set these labels/annotations on the application namespace
+    # Reference: https://argocd.readthedocs.io/en/stable/user-guide/sync-options/#namespace-metadata
+    managedNamespaceMetadata:
+      labels:
+        # Allow HTTPRoutes in this namespace to attach to the 'apps' shared gateway in the 'cluster-resources' namespace
+        shared-gateway-access: "true"
+
