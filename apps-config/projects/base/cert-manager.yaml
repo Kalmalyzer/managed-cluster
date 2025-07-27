@@ -1,0 +1,36 @@
+# Project for cert-manager
+
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cert-manager
+  namespace: argocd
+spec:
+  description: cert-manager project
+  sourceRepos:
+    # Only allow fetching configuration from the primary Git repo
+    repoURL: <Git repository URL>
+  destinations:
+    # Only allow deploying to the 'cert-manager' namespace within the cluster
+    # OVERRIDE PER-ENVIRONMENT
+    - name: <cluster name>
+      namespace: cert-manager
+    # ... plus, a few Roles & RoleBindings go into the 'kube-system' namespace
+    # OVERRIDE PER-ENVIRONMENT
+    - name: <cluster name>
+      namespace: kube-system
+
+  # Provide a shortlist of cluster-scope resources that are allowed; by default, none are allowed
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: Namespace
+    - group: "*"
+      kind: CustomResourceDefinition
+    - group: "*"
+      kind: ClusterRole
+    - group: "*"
+      kind: ClusterRoleBinding
+    - group: "*"
+      kind: ValidatingWebhookConfiguration
+    - group: "*"
+      kind: MutatingWebhookConfiguration

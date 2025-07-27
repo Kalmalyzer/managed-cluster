@@ -23,7 +23,7 @@ spec:
   project: argocd
   # OVERRIDE PER-ENVIRONMENT
   source:
-    path: apps/applications
+    path: <apps-config/applications folder for this environment>
     repoURL: <Git repository URL>
   syncPolicy:
     automated:
