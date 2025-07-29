@@ -36,7 +36,7 @@ validate-apps:
 		done; \
 		if [ "$$parent_has_kustomization" = "false" ]; then \
 			echo "Validating: $$file"; \
-			kubectl kustomize "$$(dirname "$$file")" >/dev/null; \
+			kubectl kustomize --enable-helm "$$(dirname "$$file")" >/dev/null; \
 		fi; \
 	done
 
@@ -57,7 +57,7 @@ validate-apps-config:
 		done; \
 		if [ "$$parent_has_kustomization" = "false" ]; then \
 			echo "Validating: $$file"; \
-			kubectl kustomize "$$(dirname "$$file")" >/dev/null; \
+			kubectl kustomize --enable-helm "$$(dirname "$$file")" >/dev/null; \
 		fi; \
 	done
 
