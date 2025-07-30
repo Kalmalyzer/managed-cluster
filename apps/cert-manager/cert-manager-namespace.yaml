@@ -1,0 +1,13 @@
+# Create cert-manager namespace
+# The cert-manager will reside within this namespace
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false
+  creationTimestamp: null
+  name: cert-manager
+  labels:
+    # Allow HTTPRoutes in this namespace to attach to the shared gateway
+    shared-gateway-access: "true"
