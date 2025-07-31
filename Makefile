@@ -1,7 +1,7 @@
 .PHONY: validate validate-apps validate-apps-config
 .PHONY: install-core-services delete-default-project
 .PHONY: restart-argocd-server restart-argocd-application-controller restart-argocd-dex-server
-.PHONY: install-local-secret-store port-forward-argocd-server get-admin-password
+.PHONY: port-forward-argocd-server get-admin-password install-local-secret-store export-local-secrets import-local-secrets
 
 # Check if ENV is set and valid
 ifeq ($(strip $(ENV)),)
@@ -86,6 +86,10 @@ restart-argocd-dex-server:
 	kubectl config use-context $(KUBECTL_CONTEXT_NAME)
 	kubectl rollout restart deployment argocd-dex-server -n argocd
 
+port-forward-argocd-server:
+	kubectl config use-context $(KUBECTL_CONTEXT_NAME)
+	kubectl port-forward services/argocd-server 8000:80 -n argocd
+
 get-admin-password:
 	kubectl config use-context $(KUBECTL_CONTEXT_NAME)
 	kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
@@ -94,6 +98,8 @@ install-local-secret-store:
 	kubectl config use-context $(KUBECTL_CONTEXT_NAME)
 	kubectl apply -k apps/local-secret-store
 
-port-forward-argocd-server:
-	kubectl config use-context $(KUBECTL_CONTEXT_NAME)
-	kubectl port-forward services/argocd-server 8000:80 -n argocd
+export-local-secrets:
+	kubectl get secret -n local-secret-store -o yaml > local-secrets.yaml
+
+import-local-secrets:
+	kubectl apply -f local-secrets.yaml
