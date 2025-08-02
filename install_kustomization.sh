@@ -1,11 +1,11 @@
 #!/bin/bash
 
-# This script installs an application into a k8s cluster
+# This script installs a kustomization into a k8s cluster
 # If the manifest includes any CRDs, it will first install the CRDs
 #  and wait for those to become established, before proceeding
 #  with the remaining resources
 #
-# ArgoCD contains similar built-in logic for its own manifest handling
+# ArgoCD contains similar built-in logic for its own manifest handling for an app
 
 set -euo pipefail
 
