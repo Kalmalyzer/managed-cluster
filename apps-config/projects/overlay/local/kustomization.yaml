@@ -8,3 +8,4 @@ patches:
   - path: argocd.patch.yaml
   - path: cert-manager.patch.yaml
   - path: external-secrets.patch.yaml
+  - path: kube-prometheus-stack.patch.yaml

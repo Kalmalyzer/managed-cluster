@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: kube-prometheus-stack
+  namespace: argocd
+spec:
+  sourceRepos:
+    - https://github.com/kalmalyzer/managed-cluster.git
+
+  destinations:
+    - name: talos-default
+      namespace: kube-prometheus-stack
+    - name: talos-default
+      namespace: kube-system

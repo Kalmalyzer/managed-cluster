@@ -1,0 +1,12 @@
+# Create monitoring namespace
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false
+  creationTimestamp: null
+  name: monitoring
+  labels:
+    # Allow HTTPRoutes in this namespace to attach to the shared gateway
+    shared-gateway-access: "true"

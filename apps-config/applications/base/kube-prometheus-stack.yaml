@@ -1,0 +1,56 @@
+# Application entry for kube-prometheus-stack
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  creationTimestamp: null
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  labels:
+    app.kubernetes.io/name: kube-prometheus-stack
+  name: kube-prometheus-stack
+  namespace: monitoring
+spec:
+  # Deploy the application to specified cluster/namespace
+  # OVERRIDE PER-ENVIRONMENT
+  destination:
+    name: <cluster name>
+    namespace: monitoring
+
+  # Ignore these differences between live and desired states during the diff. Note that these configurations are not
+  # used during the sync process unless the `RespectIgnoreDifferences=true` sync option is enabled.
+  ignoreDifferences:
+    - group: argoproj.io
+      jsonPointers:
+        - /status
+      kind: Application
+
+  # The Project which this Application belongs to
+  project: kube-prometheus-stack
+
+  # Fetch resources for the Application from this Git repo
+  # OVERRIDE PER-ENVIRONMENT
+  source:
+    path: <app path within Git repository>
+    repoURL: <Git repository URL>
+
+  syncPolicy:
+    automated:
+      # Allow automated sync to delete resources, if thre are resources in the cluster but the Git repo is completely empty
+      # Reference: https://argo-cd.readthedocs.io/en/stable/user-guide/auto_sync/#automatic-pruning-with-allow-empty-v18
+      allowEmpty: true
+
+      # Allow automated sync to delete resources, if they exist in the cluster but not in the Git repo
+      # Reference: https://argo-cd.readthedocs.io/en/stable/user-guide/auto_sync/#automatic-pruning
+      prune: true
+
+      # Allow automated syncs to be triggered by changes to the live cluster (this makes the application self-healing)
+      # Reference: https://argo-cd.readthedocs.io/en/stable/user-guide/auto_sync/#automatic-self-healing
+      selfHeal: true
+
+    # Set these labels/annotations on the application namespace
+    # Reference: https://argo-cd.readthedocs.io/en/stable/user-guide/sync-options/#namespace-metadata
+    managedNamespaceMetadata:
+      labels:
+        # Allow HTTPRoutes in this namespace to attach to the 'apps' shared gateway in the 'cluster-resources' namespace
+        shared-gateway-access: "true"

@@ -1,0 +1,38 @@
+# Project for kube-prometheus-stack
+
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: kube-prometheus-stack
+  namespace: argocd
+spec:
+  description: kube-prometheus-stack project
+
+  # OVERRIDE PER-ENVIRONMENT
+  sourceRepos:
+    # Only allow fetching configuration from the primary Git repo
+    - <Git repository URL>
+
+  # OVERRIDE PER-ENVIRONMENT
+  destinations:
+    # Only allow deploying to the 'kube-prometheus-stack' namespace within the cluster
+    # OVERRIDE PER-ENVIRONMENT
+    - name: <cluster name>
+      namespace: kube-prometheus-stack
+    # ... plus, a few Roles & RoleBindings go into the 'kube-system' namespace
+    # OVERRIDE PER-ENVIRONMENT
+    - name: <cluster name>
+      namespace: kube-system
+
+  # Provide a shortlist of cluster-scope resources that are allowed; by default, none are allowed
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: Namespace
+    - group: "*"
+      kind: CustomResourceDefinition
+    - group: "*"
+      kind: ClusterRole
+    - group: "*"
+      kind: ClusterRoleBinding
+    - group: "*"
+      kind: ValidatingWebhookConfiguration
