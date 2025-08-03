@@ -51,6 +51,22 @@ kubectl config use-context "${KUBECTL_CONTEXT_NAME}"
 
 TEMPLATE=$(kubectl kustomize --enable-helm "${APP_DIR}")
 
+# Remove finalizers from Application, AppProject and ApplicationSetresources in the manifest
+# For each such resource in the manifest, patch the live resource to remove finalizers if it exists
+# Othwerise the finalizer may cause deadlocks during deletion since ArgoCD isn't there to react to the finalizer
+RESOURCES_WITH_PROBLEMATIC_FINALIZERS=$(echo "${TEMPLATE}" | yq 'select(.kind == "Application" or .kind == "AppProject" or .kind == "ApplicationSet")')
+
+RESOURCES_TO_REMOVE_FINALIZERS_FROM=$(echo "${RESOURCES_WITH_PROBLEMATIC_FINALIZERS}" | yq -r '. as $item ireduce ([]; ["\($item.kind) \($item.metadata.name) \($item.metadata.namespace)"]) | .[]')
+
+if [[ "${RESOURCES_TO_REMOVE_FINALIZERS_FROM}" != *"null null null"* ]]; then
+  while read -r line; do
+    KIND=$(echo "$line" | awk '{print $1}')
+    NAME=$(echo "$line" | awk '{print $2}')
+    NAMESPACE=$(echo "$line" | awk '{print $3}')
+    kubectl patch "$KIND" "$NAME" -n "$NAMESPACE" --type=merge -p '{"metadata":{"finalizers":[]}}' || true
+  done <<< "${RESOURCES_TO_REMOVE_FINALIZERS_FROM}"
+fi
+
 # Remove all resources
 
 echo "${TEMPLATE}" | kubectl delete -f - --wait=true
