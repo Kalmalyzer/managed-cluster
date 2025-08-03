@@ -65,10 +65,8 @@ validate-apps-config:
 
 install-core-services:
 	kubectl config use-context $(KUBECTL_CONTEXT_NAME)
-	kubectl apply -k apps/external-secrets
-	kubectl apply -k apps/argocd/crds
-	kubectl wait --for condition=established --timeout=120s crd/applications.argoproj.io crd/applicationsets.argoproj.io crd/appprojects.argoproj.io
-	kubectl apply -k apps/argocd/overlays/${ENV}
+	ENV=$(ENV) ./install_app.sh apps/external-secrets
+	ENV=$(ENV) ./install_app.sh apps/argocd
 
 delete-default-project:
 	kubectl config use-context $(KUBECTL_CONTEXT_NAME)
