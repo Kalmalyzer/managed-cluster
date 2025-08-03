@@ -13,7 +13,7 @@ On-prem cluster hasn't been tested, and particularly needs a loadbalancer+ingres
 
 EKS/GKE isn't present yet
 
-Still need to do cluster monitoring/logging
+Cluster metrics monitoring & alerting is present via kube-prometheus-stack; no logging though (should use Loki for that)
 
 Still need to do application monitoring/logging
 
@@ -133,3 +133,8 @@ For each application that you want to remove:
 ```
 
 This assumes that the manifest is accurate. Many times, the manifest will result in the removal of a namespace, and therefore also any additional resources within that namespace. You may sometimes need to do additional cleanup though.
+
+
+# Production cluster setup
+
+TODO
