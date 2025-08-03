@@ -65,8 +65,8 @@ validate-apps-config:
 
 install-core-services:
 	kubectl config use-context $(KUBECTL_CONTEXT_NAME)
-	ENV=$(ENV) ./install_app.sh apps/external-secrets
-	ENV=$(ENV) ./install_app.sh apps/argocd
+	ENV=$(ENV) ./install-app.sh apps/external-secrets
+	ENV=$(ENV) ./install-app.sh apps/argocd
 
 delete-default-project:
 	kubectl config use-context $(KUBECTL_CONTEXT_NAME)
