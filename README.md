@@ -89,10 +89,9 @@ If you want to go cloud-hosted, then all three major providers offer managed Kub
 
 If you want to go self-hosted, then the traditional [k8s](https://kubernetes.io/releases/download/) and [OpenShift](https://developers.redhat.com/products/openshift/overview) are a lot of work.
 
-If you don't want to spend more time than absolutely necessary with OS updates and hardening the host machines, then Talos Linux is currently the best option. It is a Linux OS that has been hardened and stripped down to _only_ run Kubernetes. There's no SSH. There's no command line. The only way you can run software on the machine is by launching Pods via Kubernetes. You use `talosctl` to manage your machines. There is [SaaS support](https://www.siderolabs.com/platform/saas-for-kubernetes/) for managing your individual machines as well, which makes maintenance even easier.
+If you don't want to spend more time than absolutely necessary with OS updates and hardening the host machines, then [Talos Linux](https://www.talos.dev/) is currently the best option. It is a Linux OS that has been hardened and stripped down to _only_ run Kubernetes. There's no SSH. There's no command line. The only way you can run software on the machine is by launching Pods via Kubernetes. You use `talosctl` to manage your machines. There is [SaaS support](https://www.siderolabs.com/platform/saas-for-kubernetes/) for managing your individual machines as well, which makes maintenance even easier.
 
 If you for some reason want to run Kubernetes on a machine and still have access to the Linux OS (perhaps because you want to run non-Kubernetes-related things on the same machine), then [k3s](https://k3s.io/) is your best bet. It comes as a single binary. K3s is also more battle-tested than Talos.
-
 
 
 # Local development setup
