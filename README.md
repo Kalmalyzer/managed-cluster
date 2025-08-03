@@ -121,5 +121,15 @@ argocd
 
 For each application that you want to install:
 ```
-./install_kustomization.sh apps/<app_name>/overlays/local
+./install-app.sh apps/<app_name>
 ```
+
+## Remove applications
+
+
+For each application that you want to remove:
+```
+./remove-app.sh apps/<app_name>
+```
+
+This assumes that the manifest is accurate. Many times, the manifest will result in the removal of a namespace, and therefore also any additional resources within that namespace. You may sometimes need to do additional cleanup though.
