@@ -53,16 +53,13 @@ TEMPLATE=$(kubectl kustomize --enable-helm "${APP_DIR}")
 # Install CRDs if there are any
 
 CRDS=$(echo "${TEMPLATE}" | yq 'select(.kind == "CustomResourceDefinition")')
-
-CRD_NAMES=$(echo "${CRDS}" | yq -N '.metadata.name')
-
-if [[ ! -z ${CRD_NAMES} ]]; then
+if [[ -n "${CRDS}" ]]; then
+  CRD_NAMES=$(echo "${CRDS}" | yq -N '.metadata.name')
 
   echo "${CRDS}" | kubectl apply -f -
 
   for CRD in ${CRD_NAMES}; do
     kubectl wait --for condition=established --timeout=60s "crd/${CRD}"
-
   done
 fi
 
