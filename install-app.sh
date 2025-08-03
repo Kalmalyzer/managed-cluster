@@ -56,7 +56,7 @@ CRDS=$(echo "${TEMPLATE}" | yq 'select(.kind == "CustomResourceDefinition")')
 if [[ -n "${CRDS}" ]]; then
   CRD_NAMES=$(echo "${CRDS}" | yq -N '.metadata.name')
 
-  echo "${CRDS}" | kubectl apply -f -
+  echo "${CRDS}" | kubectl apply --server-side -f -
 
   for CRD in ${CRD_NAMES}; do
     kubectl wait --for condition=established --timeout=60s "crd/${CRD}"
@@ -65,5 +65,5 @@ fi
 
 # Install remainder of application
 
-echo "${TEMPLATE}" | kubectl apply -f -
+echo "${TEMPLATE}" | kubectl apply --server-side -f -
 
