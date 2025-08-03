@@ -3,8 +3,6 @@
 
 This is an example of how you can run internal IT services efficiently, for a small-to-mid-sized games company, in the year of 2025. Sometimes you can't or don't want to use cloud-based services but run the services yourself. If you are in this situation, then this exmaple is for you.
 
-The resulting services will require minimal maintenance. Everything will be well documented. If you are out sick or levae, someone else can pick up the stack with minimal instructions. On the flip side, you do need a lot of DevOps and systems administration know-how to make this work.
-
 ## Project status
 
 The "local cluster" is working OK, but may need an ingress
@@ -17,7 +15,31 @@ Cluster metrics monitoring & alerting is present via kube-prometheus-stack; no l
 
 Still need to do application monitoring/logging
 
-## Overview
+## What you get
+
+You get a complete specification of which applications are installed, and their complete configuration, in a Git repository.
+
+You get an automated mechanism for deploying from the Git repository to the machines where the applications run, including a visual dashboard that shows whether there are any differences between the Git repository and what's currently running.
+
+You get the capability to move applications between machines manually or depending on concurrent use, and pinning applications to specific machines when necessary. 
+
+You get the option to "merge" the disks in all machines into a single, large, virtual disk.
+
+You get a standard way to test-run/deploy the applications one by one on your workstation in a setting that is almost identical to the "production" environment, which is particularly nice when you want to test out updates before rolling them out.
+
+You get a standard way to see whether an application is running or not, when it restarted last, how much memory/CPU it uses, and search through its logs.
+
+The resulting services will require minimal maintenance. Everything will be well documented. If you are out sick or on leave, someone else can pick up the stack with minimal instructions. On the flip side, you do need a lot of DevOps and systems administration know-how to make this work.
+
+## What's not covered
+
+All software will need to be packaged into userspace Linux containers. Software that needs to run directly on bare metal, or directly on VMs, will need to be handled differently. This is typically test devices, and some CI systems' build agents.
+
+All software should preferably be Linux based. Windows will be difficult. MacOS won't work.
+
+This will require a secret manager outside of the cluster. There are [a ton of options](https://external-secrets.io/latest/provider/aws-secrets-manager/) to choose from.
+
+## 1-page introduction
 
 We use Kuberenetes as the operational platform. This is suitable for running most types of services, as long as they can be run on Linux.
 
@@ -31,25 +53,24 @@ We introduce ways to monitor and understand cluster utilization and health. This
 
 We intrduce ways to monitor and understand what individual applications on the cluster are doing.
 
-## What's not covered
-
-Software that needs to run directly on bare metal or on VMs are not covered here. Typical examples are test devices, and some CI systems' build agents.
-
 ## Before you start: Self-hosted or cloud-hosted?
 
 You can either run the cluster on your own hardware, or use various managed offerings.
 
 **Cost**
+
 This depends on how you want to handle cost. The cloud offerings allow you to add/remove capacity at a minute's notice and you pay only for what you use at any moment. You pay month-to-month for each bit of capacity. You should expect a minimum fee of a few hundred $/month.
 
 The self-hosted approach, on the other hand, allows you to avoid that monthly cost and instead re-purpose existing hardware or make a few up-front investments. You can get as low as $0 + power & network.
 
 **Connectivity to/from other services**
+
 This also depends on where other things are outside of the cluster. If you have other locally-hosted services and file stores on an internal network, and expect the services that run on the cluster to talk a lot to those, then it's easier to also run the cluster internally. You can set up tunnels but it is additional work.
 
 The more you want your services to be directly exposed to the Internet, or the more you want your services to utilize other cloud-hosted services (managed databases etc), the easier it is to run your services in a cloud-hosted cluster as well.
 
 **Maintenance effort**
+
 Self-hosting will require more setup and maintenance work than cloud-hosted. Any less than 100% server grade hardware will break and cause problems every now and then. Whenever this happens, your cluster is broken or at reduced capacity, and until you have acquired new parts, the cluster will remain broken or at reduced capacity. The OSes will need to be kept up-to-date and security patched by you. You will need to develop all snapshot/backup/restore strategies for state.
 
 Cloud-hosted will practically never see downtime or infrastructure-related failure modes. The cloud provider always has redundant hardware ready. The cloud provider manages the OS on the machines for you. OS and Kubernetes version upgrades happen transparently in the background (sometimes involving failover and service restarts). You can expect that the cluster always is present - your responsibility begins at the Kubernetes API level. The more you rely on cloud-hosted services, the more you get snashots/backups/restore solved for you.
