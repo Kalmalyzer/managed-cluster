@@ -18,4 +18,7 @@ module "infrastructure" {
   static_regional_ip_addresses = var.static_regional_ip_addresses
 
   iap_accessors = var.iap_accessors
+
+  billing_account = var.billing_account
+  app_projects = var.app_projects
 }

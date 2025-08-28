@@ -1,4 +1,4 @@
-.PHONY: validate validate-apps validate-apps-config
+.PHONY: validate validate-apps validate-apps-config validate-infra
 .PHONY: install-core-services delete-default-project
 .PHONY: restart-argocd-server restart-argocd-application-controller restart-argocd-dex-server
 .PHONY: port-forward-argocd-server get-admin-password install-local-secret-store export-local-secrets import-local-secrets
@@ -17,7 +17,7 @@ endif
 KUBECTL_CONTEXT_NAME:=$(shell yq .${ENV}.kubectlContextName < environments.yaml)
 CLUSTER_NAME:=$(shell yq .${ENV}.clusterName < environments.yaml)
 
-validate: validate-apps validate-apps-config
+validate: validate-apps validate-apps-config validate-infra
 
 # Find and validate all root kustomization.yaml files in apps folder
 # This finds kustomization.yaml files at any depth, but ignores nested ones
@@ -59,6 +59,16 @@ validate-apps-config:
 			echo "Validating: $$file"; \
 			kubectl kustomize --enable-helm "$$(dirname "$$file")" >/dev/null; \
 		fi; \
+	done
+
+# Find and validate all terraform projects in the repository
+# A terraform project is defined here as a folder that has a .terraform-version file in it
+validate-infra:
+	@echo "Validating terraform projects..."
+	@find . -name ".terraform-version" -type f | while read file; do \
+		dir=$$(dirname $$(dirname "$$file")); \
+		echo "Validating: $$dir"; \
+		(cd "$$dir" && terraform validate); \
 	done
 
 # Management operations for cluster

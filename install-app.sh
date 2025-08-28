@@ -33,11 +33,14 @@ fi
 
 if [[ -f "${APP_ROOT_DIR}/overlays/${ENV}/kustomization.yaml" ]]; then
   APP_DIR="${APP_ROOT_DIR}/overlays/${ENV}"
+elif [[ -f "${APP_ROOT_DIR}/base/kustomization.yaml" ]]; then
+  APP_DIR="${APP_ROOT_DIR}/base"
 elif [[ -f "${APP_ROOT_DIR}/kustomization.yaml" ]]; then
   APP_DIR="${APP_ROOT_DIR}"
 else
   echo "Error: Could not find kustomization.yaml in either:"
   echo "  ${APP_ROOT_DIR}/overlays/${ENV}/kustomization.yaml"
+  echo "  ${APP_ROOT_DIR}/base/kustomization.yaml"
   echo "  ${APP_ROOT_DIR}/kustomization.yaml"
   exit 1
 fi

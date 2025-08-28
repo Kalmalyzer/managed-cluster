@@ -1,13 +1,13 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: external-secrets
+  name: argocd
   namespace: argocd
 spec:
   destination:
     name: talos-default
-    namespace: external-secrets
+    namespace: argocd
 
   source:
-    path: apps/external-secrets/base
+    path: apps/argocd/overlays/gke
     repoURL: https://github.com/kalmalyzer/managed-cluster.git

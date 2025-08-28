@@ -1,13 +1,13 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: external-secrets
+  name: cert-manager
   namespace: argocd
 spec:
   destination:
     name: talos-default
-    namespace: external-secrets
+    namespace: cert-manager
 
   source:
-    path: apps/external-secrets/base
+    path: apps/cert-manager
     repoURL: https://github.com/kalmalyzer/managed-cluster.git

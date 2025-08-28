@@ -1,13 +1,13 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: external-secrets
+  name: kube-prometheus-stack
   namespace: argocd
 spec:
   destination:
     name: talos-default
-    namespace: external-secrets
+    namespace: monitoring
 
   source:
-    path: apps/external-secrets/base
+    path: apps/kube-prometheus-stack
     repoURL: https://github.com/kalmalyzer/managed-cluster.git

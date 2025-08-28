@@ -107,3 +107,11 @@ iap_accessors = [
   # Allow users in this pre-defined group to access any resources that are protected behind an Identity-Aware Proxy
   # "group:managed-cluster-iap@kalms.org",
 ]
+
+# Biling account which all newly created app-projects will get connected to
+billing_account = "003012-8F9C54-134FDE"
+
+app_projects = [
+  # Create GCP projects + associated buckets for Terraform state with the following names
+  "kalmalyzer-external-secrets",
+]
