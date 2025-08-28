@@ -1,13 +1,15 @@
+# This Application ensures that all Applications within /apps/applications get created
+
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: external-secrets
+  name: argocd-applications
   namespace: argocd
 spec:
   destination:
     name: gke
-    namespace: external-secrets
+    namespace: argocd
 
   source:
-    path: apps/external-secrets/overlays/gke
+    path: apps-config/applications/overlay/gke
     repoURL: https://github.com/kalmalyzer/managed-cluster.git

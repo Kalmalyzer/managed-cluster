@@ -1,0 +1,15 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: global-project
+  namespace: argocd
+spec:
+
+  syncWindows:
+  - kind: deny
+    schedule: "* * * * *"
+    timeZone: "Europe/Amsterdam"
+    duration: "1h"
+    applications:
+    - "*"
+    manualSync: true

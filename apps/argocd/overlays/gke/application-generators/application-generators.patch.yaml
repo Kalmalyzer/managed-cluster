@@ -1,0 +1,13 @@
+
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: application-generators
+  namespace: argocd
+spec:
+  sourceRepos:
+    - https://github.com/kalmalyzer/managed-cluster.git
+
+  destinations:
+    - name: gke
+      namespace: argocd

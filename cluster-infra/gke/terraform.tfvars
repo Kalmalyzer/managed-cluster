@@ -114,4 +114,5 @@ billing_account = "003012-8F9C54-134FDE"
 app_projects = [
   # Create GCP projects + associated buckets for Terraform state with the following names
   "kalmalyzer-external-secrets",
+  "kalmalyzer-argocd",
 ]

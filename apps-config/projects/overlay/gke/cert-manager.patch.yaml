@@ -1,0 +1,14 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cert-manager
+  namespace: argocd
+spec:
+  sourceRepos:
+    - https://github.com/kalmalyzer/managed-cluster.git
+
+  destinations:
+    - name: talos-default
+      namespace: cert-manager
+    - name: talos-default
+      namespace: kube-system
