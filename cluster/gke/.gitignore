@@ -1,0 +1,4 @@
+# Ignore any local Terraform cache folders
+
+/.terraform
+
