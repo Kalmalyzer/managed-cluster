@@ -155,6 +155,70 @@ For each application that you want to remove:
 This assumes that the manifest is accurate. Many times, the manifest will result in the removal of a namespace, and therefore also any additional resources within that namespace. You may sometimes need to do additional cleanup though.
 
 
-# Production cluster setup
+# GKE cluster setup
 
-TODO
+## Decide on location
+
+Decide on a [datacenter region](https://cloud.google.com/about/locations) that is close to you.
+
+## Rename and make it yours
+
+There are some resources in Google Cloud that need gloobally unique identifiers. For example, any Cloud Storage buckets need to have names not already claimed by any other Google Cloud user. Search through the entire project for the word `kalmalyzer` and change it to a prefix that work for you.
+
+In the rest of the documentation, we will refer to that prefix as `${prefix}`.
+
+## Create Google Cloud organization for cluster
+
+Create an organization called `${prefix}-managed-cluster` in Google Cloud. Connect it to billing.
+
+Create a Cloud Storage bucket named `${prefix}-managed-cluster-state`. Choose the region where you
+will run the cluster. All other settings can be left as default.
+
+## Configure and deploy GKE cluster
+
+Go through the settings in [cluster/tf/gke/terraform.tfvars](cluster/tf/gke/terraform.tfvars) and update them. Look specifically for any mentions of a region/zone (normally `eurupe-west1`), and `billing_account`; these need to be updated to match your preferences.
+
+Deploy and bring up the GKE cluster:
+
+```
+(cd cluster/tf/gke && terraform init && terraform apply)
+````
+
+Once Terraform completes, you should be able to view your cluster in the [Google Cloud web UI](https://console.cloud.google.com/kubernetes/list/overview), as long as you switch to the right project.
+
+## Configure and deploy external-secrets
+
+Begin by creating the GCP resources necessary for External Secrets Opeator to function on GKE:
+```
+(cd apps/external-secrets/tf/gke && terraform init && terraform apply)
+```
+
+After this, install the software onto the cluster manually:
+
+```
+ENV=gke ./install-app.sh apps/external-secrets
+```
+
+## Configure and deploy Argo CD
+
+Begin by creating the GCP resources necessary for Argo CD to function on GKE:
+```
+(cd apps/argocd/tf/gke && terraform init && terraform apply)
+```
+
+Then, create the secrets that Argo CD need to function.
+Add them to [Secret Manager](https://console.cloud.google.com/security/secret-manager) in your "${prefix}-argocd" project.
+
+After this, install the software onto the cluster manually:
+
+```
+ENV=gke ./install-app.sh apps/argocd
+```
+
+You can then access the software, without configuring any domains or SSL certificates, by port-forwarding:
+
+```
+kubectl port-forward svc/argocd-server -n argocd 8080:80
+```
+
+Visit [http://localhost:8080](http://localhost:8080) in a web browser. Username: `admin`, password: run `ENV=gke make get-admin-password`. You should now see the ArgoCD web front-end.
