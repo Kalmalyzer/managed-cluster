@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    bucket = "kalmalyzer-managed-cluster-state"
+    bucket = "kalms-managed-gcp-projects-state"
     prefix = "core"
   }
 }

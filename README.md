@@ -163,25 +163,50 @@ Decide on a [datacenter region](https://cloud.google.com/about/locations) that i
 
 ## Rename and make it yours
 
-There are some resources in Google Cloud that need gloobally unique identifiers. For example, any Cloud Storage buckets need to have names not already claimed by any other Google Cloud user. Search through the entire project for the word `kalmalyzer` and change it to a prefix that work for you.
+Search through the entire repository for the word `kalms.org` and change it to your domain name.
+
+There are some resources in Google Cloud that need globally unique identifiers. For example, any Cloud Storage buckets need to have names not already claimed by any other Google Cloud user. Search through the entire repository for the word `kalms` and change it to a prefix that works for you. The prefix should be max 9 characters in length.
 
 In the rest of the documentation, we will refer to that prefix as `${prefix}`.
 
-## Create Google Cloud organization for cluster
+## Setup Google Cloud Identity
 
-Create an organization called `${prefix}-managed-cluster` in Google Cloud. Connect it to billing.
+(This is if you don't already have Google Workspace)
 
-Create a Cloud Storage bucket named `${prefix}-managed-cluster-state`. Choose the region where you
-will run the cluster. All other settings can be left as default.
+Folow [Google's setup instructions](https://cloud.google.com/identity/docs/set-up-cloud-identity-admin). You will need to own a domain and have a credit card ready.
+
+## Create Google Cloud root folder/project
+
+Create a folder called `${prefix}-managed-cluster` in Google Cloud.
+
+Create a project within the `${prefix}-managed-cluster` folder. Call it `${prefix}-managed-gcp-projects`. Connect it to billing.
+
+Create a Cloud Storage bucket named `${prefix}-managed-managed-gcp-projects-state` within this project. Choose the region where youwill run the cluster. All other settings can be left as default.
+
+## Configure and create remaining GKE projects
+
+Visit [IAM](https://console.cloud.google.com/iam-admin/iam) for your root organization.  Ensure you have the `Folder Admin` role.
+
+Visit your billing account. Choose "manage billing acount". Ensure you have the `Billing Account Administrator` role.
+
+## Create additional GKE projects & Terraform stae buckets
+
+Go through the settings in [infra/gke/gcp-projects/terraform.tfvars](infra/gke/gcp-projects/terraform.tfvars) and update them. Look specifically for any mentions of a region/zone (normally `eurupe-west1`), `billing_account_id`, and `cluster_folder_id`; these need to be updated to match your preferences.
+
+Create additional GKE projects, with a state bucket in each:
+
+```
+(cd infra/gke/gcp-projects && terraform init && terraform apply)
+````
 
 ## Configure and deploy GKE cluster
 
-Go through the settings in [cluster/tf/gke/terraform.tfvars](cluster/tf/gke/terraform.tfvars) and update them. Look specifically for any mentions of a region/zone (normally `eurupe-west1`), and `billing_account`; these need to be updated to match your preferences.
+Also go through the settings in [infra/gke/cluster/terraform.tfvars](infra/gke/cluster/terraform.tfvars) and update them. Look specifically for any mentions of a region/zone (normally `eurupe-west1`); this needs to be updated to match your preferences.
 
 Deploy and bring up the GKE cluster:
 
 ```
-(cd cluster/tf/gke && terraform init && terraform apply)
+(cd infra/gke/cluster && terraform init && terraform apply)
 ````
 
 Once Terraform completes, you should be able to view your cluster in the [Google Cloud web UI](https://console.cloud.google.com/kubernetes/list/overview), as long as you switch to the right project.
@@ -206,8 +231,13 @@ Begin by creating the GCP resources necessary for Argo CD to function on GKE:
 (cd apps/argocd/tf/gke && terraform init && terraform apply)
 ```
 
-Then, create the secrets that Argo CD need to function.
-Add them to [Secret Manager](https://console.cloud.google.com/security/secret-manager) in your "${prefix}-argocd" project.
+### Configure GitHub webhook for ArgoCD
+
+Configure a [GitHub Webhook](https://argo-cd.readthedocs.io/en/stable/operator-manual/webhook/) for this repo.
+
+Inject secret into `core-services/self-managed/argo-cd/argocd-secret/github-webhook-secret.yaml`
+
+Add the secret to [Secret Manager](https://console.cloud.google.com/security/secret-manager) in your "${prefix}-argocd" project.
 
 After this, install the software onto the cluster manually:
 

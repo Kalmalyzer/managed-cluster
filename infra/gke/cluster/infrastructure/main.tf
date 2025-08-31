@@ -68,13 +68,3 @@ module "iap_access" {
   project_id = var.project_id
   iap_accessors = var.iap_accessors
 }
-
-module "app_projects" {
-  depends_on = [module.google_apis]
-
-  source = "./app_projects"
-
-  region = var.region
-  billing_account = var.billing_account
-  app_projects = var.app_projects
-}

@@ -55,11 +55,3 @@ variable "static_regional_ip_addresses" {
 variable "iap_accessors" {
   type = list(string)
 }
-
-variable "billing_account" {
-  type = string
-}
-
-variable "app_projects" {
-  type = list(string)
-}
