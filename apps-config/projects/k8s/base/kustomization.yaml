@@ -4,5 +4,6 @@ kind: Kustomization
 resources:
   - argocd.yaml
   - cert-manager.yaml
+  - cluster-resources.yaml
   - external-secrets.yaml
   - kube-prometheus-stack.yaml

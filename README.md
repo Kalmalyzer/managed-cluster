@@ -231,6 +231,14 @@ Begin by creating the GCP resources necessary for Argo CD to function on GKE:
 (cd apps/argocd/tf/gke && terraform init && terraform apply)
 ```
 
+### Configure OAuth for ArgoCD
+
+Configure an [OAuth consent screen](https://argo-cd.readthedocs.io/en/stable/operator-manual/user-management/google/#configure-your-oauth-consent-screen) in GCP Console for the `wl-argocd` project.
+
+Configure a new [OAuth Client ID](https://argo-cd.readthedocs.io/en/stable/operator-manual/user-management/google/#configure-a-new-oauth-client-id) in GCP Console for the `${prefix}-argocd` project.
+
+Inject this into [apps/argocd/tf/gke/argocd-cm/authenticate-with-google-workspace.patch.yaml](apps/argocd/tf/gke/argocd-cm/authenticate-with-google-workspace.patch.yaml).
+
 ### Configure GitHub webhook for ArgoCD
 
 Configure a [GitHub Webhook](https://argo-cd.readthedocs.io/en/stable/operator-manual/webhook/) for this repo.

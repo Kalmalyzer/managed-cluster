@@ -1,0 +1,18 @@
+# Declare a route, from the load balancer, to the argocd-server Service
+apiVersion: gateway.networking.k8s.io/v1beta1
+kind: HTTPRoute
+metadata:
+  name: argocd-server-http-to-https-redirect
+spec:
+  parentRefs:
+    - name: apps
+      namespace: cluster-resources
+      sectionName: http
+  hostnames:
+    - argocd.walkerlabs.com
+  rules:
+    # Redirect incoming traffic on port 80 of the gateway to port 443 instead
+    - filters:
+        - type: RequestRedirect
+          requestRedirect:
+            scheme: https

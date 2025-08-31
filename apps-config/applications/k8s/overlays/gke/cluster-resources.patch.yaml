@@ -1,0 +1,13 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: cluster-resources
+  namespace: argocd
+spec:
+  destination:
+    name: talos-default
+    namespace: cluster-resources
+
+  source:
+    path: apps/cluster-resources
+    repoURL: https://github.com/kalmalyzer/managed-cluster.git

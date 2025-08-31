@@ -4,6 +4,9 @@ kind: Kustomization
 resources:
   - ../../base
 
+  # Set up gateway traffic (using shared gateway, routing HTTPS traffic into argocd-server)
+  - argocd-gateway
+
   # Add local & external secret definitions; External Secrets Operator will then create/populate/update corresponding K8s secrets
   - secrets
 
