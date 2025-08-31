@@ -3,5 +3,5 @@ local:
   clusterName: talos-default
 
 gke:
-  kubectlContextName: gke_kalmalyzer-managed-cluster_europe-west1_managed-cluster
+  kubectlContextName: gke_kalms-managed-cluster_europe-west1_managed-cluster
   clusterName: managed-cluster
