@@ -82,6 +82,8 @@ delete-default-project:
 	kubectl config use-context $(KUBECTL_CONTEXT_NAME)
 	kubectl delete appproject default -n argocd
 
+# ArgoCD utility functions
+
 restart-argocd-server:
 	kubectl config use-context $(KUBECTL_CONTEXT_NAME)
 	kubectl rollout restart deployment argocd-server -n argocd
@@ -101,6 +103,14 @@ port-forward-argocd-server:
 get-admin-password:
 	kubectl config use-context $(KUBECTL_CONTEXT_NAME)
 	kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d; echo
+
+# External Secrets Operator utility functions
+
+restart-external-secrets:
+	kubectl config use-context $(KUBECTL_CONTEXT_NAME)
+	kubectl rollout restart deployment external-secrets -n external-secrets
+
+# Other utility functions
 
 install-local-secret-store:
 	kubectl config use-context $(KUBECTL_CONTEXT_NAME)
