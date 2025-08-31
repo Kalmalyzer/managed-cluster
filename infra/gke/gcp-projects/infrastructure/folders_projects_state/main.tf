@@ -1,4 +1,21 @@
 
+# Retrieve ancestry of the '${prefix}-managed-gcp-projects' project
+# The managed cluster project and the apps folder will be created as sibling to this project
+# Reference: https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/project_ancestry
+data "google_project_ancestry" "gcp_projects_ancestry" {
+}
+
+locals {
+
+  # Root of all the resources we will create;
+  # either
+  #   type = "organization", id = <organization ID>
+  # or
+  #   type = "folder", id = <folder ID>
+  # depending on where in the hierarchy the '${prefix}-managed-gcp-projects' project is located
+  parent = data.google_project_ancestry.gcp_projects_ancestry.ancestors[1]
+}
+
 # Create a GCP folder which will contain all apps' projects
 resource "google_folder" "app_folder" {
 
@@ -6,9 +23,9 @@ resource "google_folder" "app_folder" {
   # Reference: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_folder#display_name-1
   display_name = var.app_folder
 
-  # Parent folder
+  # Parent folder/organization
   # https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_folder#parent-1
-  parent = "folders/${var.cluster_folder_id}"
+  parent = "${local.parent.type}s/${local.parent.id}"
 
   # Terraform is not allowed to delete this folder
   # Reference: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_folder#deletion_protection-1
@@ -20,13 +37,16 @@ resource "google_folder" "app_folder" {
 locals {
   projects_and_folders = merge(
     {
-      # The "cluster project" will reside within the root folder
-      (var.cluster_project) = var.cluster_folder_id
+      # The "cluster project" will reside within the root of the organization
+      (var.cluster_project) = local.parent,
     },
     {
       # All app projects will reside within the app folder
       for app_project in var.app_projects :
-        app_project => google_folder.app_folder.id
+        app_project => {
+          type: "folder",
+          id: google_folder.app_folder.id,
+        }
     }
   )
 }
@@ -48,9 +68,13 @@ resource "google_project" "projects" {
   # Reference: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_project#billing_account-1
   billing_account     = var.billing_account
 
-  # Numeric ID of the parent folder for this project
+  # Numeric ID of the parent organization for this project, or null if it is supposed to be placed within a folder
+  # Reference: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_project#org_id-1
+  org_id           = each.value.type == "organization" ? each.value.id : null
+
+  # Numeric ID of the parent folder for this project, or null if it is supposed to be placed directly in an organization
   # Reference: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_project#folder_id-1
-  folder_id           = each.value
+  folder_id           = each.value.type == "folder" ? each.value.id : null
 
   # Do not create default network in project
   # Reference: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_project#auto_create_network-1

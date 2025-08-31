@@ -10,10 +10,6 @@ variable "billing_account" {
   type = string
 }
 
-variable "cluster_folder_id" {
-  type = string
-}
-
 variable "cluster_project" {
   type = string
 }
