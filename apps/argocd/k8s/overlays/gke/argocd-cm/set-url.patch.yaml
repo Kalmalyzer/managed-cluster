@@ -4,4 +4,4 @@ metadata:
   name: argocd-cm
 data:
   # Set external-facing URL
-  url: https://argocd.local
+  url: https://argocd.kalms.org

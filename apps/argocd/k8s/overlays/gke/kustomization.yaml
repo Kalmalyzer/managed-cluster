@@ -13,6 +13,8 @@ patches:
   - path: application-generators/argocd-projects.patch.yaml
 
   # Patches for argocd-cm ConfigMap
+  - path: argocd-cm/authenticate-with-google-workspace.patch.yaml
+  - path: argocd-cm/disable-admin-user-account.patch.yaml
   - path: argocd-cm/set-url.patch.yaml
 
   # Patches for global-project
