@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    bucket = "kalmalyzer-external-secrets-state"
+    bucket = "kalms-external-secrets-state"
     prefix = "core"
   }
 }

@@ -1,6 +1,6 @@
 terraform {
   backend "gcs" {
-    bucket = "kalmalyzer-argocd-state"
+    bucket = "kalms-argocd-state"
     prefix = "core"
   }
 }

@@ -1,3 +1,3 @@
-project_id = "kalmalyzer-external-secrets"
+project_id = "kalms-external-secrets"
 
-workload_identity_pool = "kalmalyzer-managed-cluster"
+workload_identity_pool = "kalms-managed-cluster"
