@@ -37,7 +37,7 @@ resource "google_folder" "app_folder" {
 locals {
   projects_and_folders = merge(
     {
-      # The "cluster project" will reside within the root of the organization
+      # The "cluster project" will reside side-by-side with the "${prefix}-managed-gcp-projects" project
       (var.cluster_project) = local.parent,
     },
     {
