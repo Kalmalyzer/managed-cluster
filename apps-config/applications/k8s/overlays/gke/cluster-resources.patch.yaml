@@ -4,10 +4,6 @@ metadata:
   name: cluster-resources
   namespace: argocd
 spec:
-  destination:
-    name: gke
-    namespace: cluster-resources
-
   source:
     path: apps/cluster-resources/k8s/overlays/gke
     repoURL: https://github.com/kalmalyzer/managed-cluster.git

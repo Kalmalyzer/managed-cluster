@@ -4,10 +4,6 @@ metadata:
   name: cert-manager
   namespace: argocd
 spec:
-  destination:
-    name: talos-default
-    namespace: cert-manager
-
   source:
     path: apps/cert-manager/k8s
     repoURL: https://github.com/kalmalyzer/managed-cluster.git

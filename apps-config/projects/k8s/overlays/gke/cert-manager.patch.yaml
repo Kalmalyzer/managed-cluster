@@ -6,9 +6,3 @@ metadata:
 spec:
   sourceRepos:
     - https://github.com/kalmalyzer/managed-cluster.git
-
-  destinations:
-    - name: gke
-      namespace: cert-manager
-    - name: gke
-      namespace: kube-system

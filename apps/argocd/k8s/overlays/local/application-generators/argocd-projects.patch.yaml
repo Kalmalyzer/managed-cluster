@@ -6,9 +6,6 @@ metadata:
   name: argocd-projects
   namespace: argocd
 spec:
-  destination:
-    name: talos-default
-    namespace: argocd
   source:
     path: apps-config/projects/k8s/overlays/local
     repoURL: https://github.com/kalmalyzer/managed-cluster.git

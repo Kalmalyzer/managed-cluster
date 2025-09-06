@@ -12,9 +12,8 @@ metadata:
   namespace: argocd
 spec:
   # Deploy the application to specified cluster/namespace
-  # OVERRIDE PER-ENVIRONMENT
   destination:
-    name: <cluster name>
+    name: in-cluster
     namespace: cluster-resources
 
   # Ignore these differences between live and desired states during the diff. Note that these configurations are not

@@ -4,10 +4,6 @@ metadata:
   name: argocd
   namespace: argocd
 spec:
-  destination:
-    name: gke
-    namespace: argocd
-
   source:
     path: apps/argocd/k8s/overlays/gke
     repoURL: https://github.com/kalmalyzer/managed-cluster.git

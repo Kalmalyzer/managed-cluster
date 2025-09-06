@@ -13,10 +13,9 @@ spec:
   # Only allow fetching configuration from the primary Git repo
     - <Git repository URL>
 
-  # OVERRIDE PER-ENVIRONMENT
   destinations:
     # Only allow deploying to the 'argocd' namespace within the cluster
-    - name: <cluster name>
+    - name: in-cluster
       namespace: argocd
 
   # Provide a shortlist of cluster-scope resources that are allowed; by default, none are allowed

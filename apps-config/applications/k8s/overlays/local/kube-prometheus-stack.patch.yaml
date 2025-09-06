@@ -4,10 +4,6 @@ metadata:
   name: kube-prometheus-stack
   namespace: argocd
 spec:
-  destination:
-    name: talos-default
-    namespace: monitoring
-
   source:
     path: apps/kube-prometheus-stack
     repoURL: https://github.com/kalmalyzer/managed-cluster.git

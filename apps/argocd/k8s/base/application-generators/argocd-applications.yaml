@@ -11,9 +11,8 @@ metadata:
   name: argocd-applications
   namespace: argocd
 spec:
-  # OVERRIDE PER-ENVIRONMENT
   destination:
-    name: <cluster name>
+    name: in-cluster
     namespace: argocd
   ignoreDifferences:
     - group: argoproj.io

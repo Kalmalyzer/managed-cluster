@@ -13,15 +13,13 @@ spec:
     # Only allow fetching configuration from the primary Git repo
     - <Git repository URL>
 
-  # OVERRIDE PER-ENVIRONMENT
   destinations:
     # Only allow deploying to the 'cert-manager' namespace within the cluster
     # OVERRIDE PER-ENVIRONMENT
-    - name: <cluster name>
+    - name: in-cluster
       namespace: cert-manager
     # ... plus, a few Roles & RoleBindings go into the 'kube-system' namespace
-    # OVERRIDE PER-ENVIRONMENT
-    - name: <cluster name>
+    - name: in-cluster
       namespace: kube-system
 
   # Provide a shortlist of cluster-scope resources that are allowed; by default, none are allowed
