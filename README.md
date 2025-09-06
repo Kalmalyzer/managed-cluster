@@ -260,3 +260,18 @@ kubectl port-forward svc/argocd-server -n argocd 8080:80
 ```
 
 Visit [http://localhost:8080](http://localhost:8080) in a web browser. Username: `admin`, password: run `ENV=gke make get-admin-password`. You should now see the ArgoCD web front-end.
+
+## Give ArgoCD access to GitHub + configure webhook
+
+Create a new GitHub app, following [ArgoCD's GitHub App Credential](https://argo-cd.readthedocs.io/en/stable/user-guide/private-repositories/#github-app-credential) docs and [GitHub's Registering a GitHub app](https://docs.github.com/en/apps/creating-github-apps/registering-a-github-app/registering-a-github-app) docs. As part of the app configuration, specify [GitHub Webhook](https://argo-cd.readthedocs.io/en/stable/operator-manual/webhook/) settings as well. You will need to randomize a new webhook secret.
+
+Generate a private key for the app, and save this.
+
+Install the app into your GitHub organization.
+
+Update the GitHub credentials External Secret for Argo CD.
+
+Inject the webhook secret into the GitHub webhook secret for ArgoCD.
+
+Inject the private key in the the GitHub private key secret for ArgoCD.
+
