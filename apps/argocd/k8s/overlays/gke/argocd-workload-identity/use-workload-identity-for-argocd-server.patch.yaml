@@ -1,0 +1,9 @@
+# This account is bound to a corresponding Google Service Account via Workload Identity
+#   and this enables argocd-server to interact with GCP resources
+
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: argocd-server
+  annotations:
+    iam.gke.io/gcp-service-account: argocd-server@kalms-argocd.iam.gserviceaccount.com

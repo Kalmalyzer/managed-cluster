@@ -15,6 +15,10 @@ patches:
   - path: application-generators/argocd-applications.patch.yaml
   - path: application-generators/argocd-projects.patch.yaml
 
+  # Patches for ServiceAccounts to use Workload Identity
+  - path: argocd-workload-identity/use-workload-identity-for-argocd-application-controller.patch.yaml
+  - path: argocd-workload-identity/use-workload-identity-for-argocd-server.patch.yaml
+
   # Patches for argocd-cm ConfigMap
   - path: argocd-cm/authenticate-with-google-workspace.patch.yaml
   - path: argocd-cm/disable-admin-user-account.patch.yaml
