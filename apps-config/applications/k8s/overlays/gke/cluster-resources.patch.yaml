@@ -9,5 +9,5 @@ spec:
     namespace: cluster-resources
 
   source:
-    path: apps/cluster-resources
+    path: apps/cluster-resources/k8s/overlays/gke
     repoURL: https://github.com/kalmalyzer/managed-cluster.git

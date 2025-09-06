@@ -9,5 +9,5 @@ spec:
     namespace: cert-manager
 
   source:
-    path: apps/cert-manager
+    path: apps/cert-manager/k8s
     repoURL: https://github.com/kalmalyzer/managed-cluster.git
