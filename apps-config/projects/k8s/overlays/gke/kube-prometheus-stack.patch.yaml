@@ -8,7 +8,7 @@ spec:
     - https://github.com/kalmalyzer/managed-cluster.git
 
   destinations:
-    - name: talos-default
+    - name: gke
       namespace: kube-prometheus-stack
-    - name: talos-default
+    - name: gke
       namespace: kube-system
