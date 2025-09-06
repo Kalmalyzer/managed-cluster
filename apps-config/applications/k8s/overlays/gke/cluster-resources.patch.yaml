@@ -1,9 +1,0 @@
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: cluster-resources
-  namespace: argocd
-spec:
-  source:
-    path: apps/cluster-resources/k8s/overlays/gke
-    repoURL: https://github.com/kalmalyzer/managed-cluster.git

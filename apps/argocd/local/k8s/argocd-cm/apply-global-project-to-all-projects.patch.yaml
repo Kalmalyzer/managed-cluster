@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+data:
+
+  # 'global-project' is a project that applies to all other projects except itself 
+  # Reference: https://argo-cd.readthedocs.io/en/latest/user-guide/projects/#configuring-global-projects-v18
+  globalProjects: |-
+    - labelSelector:
+        matchExpressions:
+          - key: name
+            operator: NotIn
+            values:
+              - global-project
+      projectName: global-project

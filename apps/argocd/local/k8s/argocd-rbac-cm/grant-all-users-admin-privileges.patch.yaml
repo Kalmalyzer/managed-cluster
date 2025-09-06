@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-rbac-cm
+data:
+  # Grant all users the admin role
+  # This will give everyone full access to Argo CD
+  # In the future, we should only allow a few select users full access and rely on fine-grained RBAC
+  policy.default: role:admin

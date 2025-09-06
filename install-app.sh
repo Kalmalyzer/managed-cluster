@@ -31,16 +31,13 @@ fi
 
 # Locate the kustomization.yaml file for the app
 
-if [[ -f "${APP_ROOT_DIR}/k8s/overlays/${ENV}/kustomization.yaml" ]]; then
-  APP_DIR="${APP_ROOT_DIR}/k8s/overlays/${ENV}"
-elif [[ -f "${APP_ROOT_DIR}/k8s/base/kustomization.yaml" ]]; then
-  APP_DIR="${APP_ROOT_DIR}/k8s/base"
+if [[ -f "${APP_ROOT_DIR}/${ENV}/k8s/kustomization.yaml" ]]; then
+  APP_DIR="${APP_ROOT_DIR}/${ENV}/k8s"
 elif [[ -f "${APP_ROOT_DIR}/k8s/kustomization.yaml" ]]; then
   APP_DIR="${APP_ROOT_DIR}/k8s"
 else
   echo "Error: Could not find kustomization.yaml in either:"
-  echo "  ${APP_ROOT_DIR}/k8s/overlays/${ENV}/kustomization.yaml"
-  echo "  ${APP_ROOT_DIR}/k8s/base/kustomization.yaml"
+  echo "  ${APP_ROOT_DIR}/${ENV}/k8s/kustomization.yaml"
   echo "  ${APP_ROOT_DIR}/k8s/kustomization.yaml"
   exit 1
 fi

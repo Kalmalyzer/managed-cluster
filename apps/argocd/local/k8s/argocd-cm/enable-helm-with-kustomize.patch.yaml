@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cm
+data:
+  # Enable Helm chart templating from within Kustomize
+  # All Kustomize applications can now utilize the 'helmCharts' feature, to render Helm charts and then have the result kustomized
+  kustomize.buildOptions: --enable-helm

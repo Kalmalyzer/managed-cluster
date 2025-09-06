@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: argocd-cmd-params-cm
+data:
+  # Disable HTTP to HTTPS redirection within the ArgoCD application. We will do HTTPS termination via the ingress,
+  #   and ArgoCD will receive plain HTTP traffic.
+  server.insecure: "true"

@@ -1,0 +1,32 @@
+# This Application ensures that all AppProjects within /apps/projects get created
+
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  creationTimestamp: null
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+  labels:
+    app.kubernetes.io/name: argocd-projects
+  name: argocd-projects
+  namespace: argocd
+spec:
+  destination:
+    name: in-cluster
+    namespace: argocd
+  ignoreDifferences:
+    - group: argoproj.io
+      jsonPointers:
+        - /status
+      kind: Application
+  project: application-generators
+  source:
+    path: apps-config/local/projects
+    repoURL: https://github.com/kalmalyzer/managed-cluster.git
+  syncPolicy:
+    automated:
+      allowEmpty: true
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - allowEmpty=true

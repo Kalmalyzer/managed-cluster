@@ -1,0 +1,35 @@
+# Project for cert-manager
+
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cert-manager
+spec:
+  description: cert-manager project
+
+  sourceRepos:
+    # Only allow fetching configuration from the primary Git repo
+    - https://github.com/kalmalyzer/managed-cluster.git
+
+  destinations:
+    # Only allow deploying to the 'cert-manager' namespace within the cluster
+    - name: in-cluster
+      namespace: cert-manager
+    # ... plus, a few Roles & RoleBindings go into the 'kube-system' namespace
+    - name: in-cluster
+      namespace: kube-system
+
+  # Provide a shortlist of cluster-scope resources that are allowed; by default, none are allowed
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: Namespace
+    - group: "*"
+      kind: CustomResourceDefinition
+    - group: "*"
+      kind: ClusterRole
+    - group: "*"
+      kind: ClusterRoleBinding
+    - group: "*"
+      kind: ValidatingWebhookConfiguration
+    - group: "*"
+      kind: MutatingWebhookConfiguration

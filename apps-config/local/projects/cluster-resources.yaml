@@ -1,0 +1,25 @@
+# Project for cluster-resources
+
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: cluster-resources
+spec:
+  description: cluster-resources project
+
+  sourceRepos:
+    # Only allow fetching configuration from the primary Git repo
+    - https://github.com/kalmalyzer/managed-cluster.git
+
+  destinations:
+    # Only allow deploying to the 'cluster-resources' namespace within the cluster
+    - name: in-cluster
+      namespace: cluster-resources
+    # ... plus, a few Roles & RoleBindings go into the 'kube-system' namespace
+    - name: in-cluster
+      namespace: kube-system
+
+  # Provide a shortlist of cluster-scope resources that are allowed; by default, none are allowed
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: Namespace

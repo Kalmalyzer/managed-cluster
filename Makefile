@@ -1,7 +1,9 @@
+
 .PHONY: validate validate-apps validate-apps-config validate-infra
+.PHONY: activate
 .PHONY: install-core-services delete-default-project
 .PHONY: restart-argocd-server restart-argocd-application-controller restart-argocd-dex-server
-.PHONY: port-forward-argocd-server get-admin-password install-local-secret-store export-local-secrets import-local-secrets
+.PHONY: port-forward-argocd-server get-admin-password
 
 # Check if ENV is set and valid
 ifeq ($(strip $(ENV)),)
@@ -71,6 +73,12 @@ validate-infra:
 		(cd "$$dir" && terraform validate); \
 	done
 
+# Activate the environment
+
+activate:
+	(cd infra/$(ENV) && make activate)
+	kubectl config use-context $(KUBECTL_CONTEXT_NAME)
+
 # Management operations for cluster
 
 install-core-services:
@@ -109,15 +117,3 @@ get-admin-password:
 restart-external-secrets:
 	kubectl config use-context $(KUBECTL_CONTEXT_NAME)
 	kubectl rollout restart deployment external-secrets -n external-secrets
-
-# Other utility functions
-
-install-local-secret-store:
-	kubectl config use-context $(KUBECTL_CONTEXT_NAME)
-	kubectl apply -k apps/local-secret-store
-
-export-local-secrets:
-	kubectl get secret -n local-secret-store -o yaml > local-secrets.yaml
-
-import-local-secrets:
-	kubectl apply -f local-secrets.yaml

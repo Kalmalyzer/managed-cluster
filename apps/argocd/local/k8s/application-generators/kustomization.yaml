@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: argocd
+
+resources:
+  # Create 'application-generators' project
+  # This allows the projects below to run
+  - application-generators.yaml
+
+  # Create 'argocd-applications' application
+  # This manages creation of second-level Applications
+  - argocd-applications.yaml
+
+  # Create 'argocd-projects' application
+  # This manages creation of second-level Projects
+  - argocd-projects.yaml

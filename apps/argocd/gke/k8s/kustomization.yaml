@@ -1,0 +1,41 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: argocd
+
+resources:
+  # Create namespace for ArgoCD application
+  - namespace
+
+  # Install ArgoCD application
+  - application
+
+  # Create Applications which generate other Aplications/Projects
+  - application-generators
+
+  # Set up gateway traffic (using shared gateway, routing HTTPS traffic into argocd-server)
+  - argocd-gateway
+
+  # Add a global Project, that contains global configuration that applies to all other Projects
+  - global-project
+
+  # Add local & external secret definitions; External Secrets Operator will then create/populate/update corresponding K8s secrets
+  - secrets
+
+patches:
+  # Patches for argocd-cm ConfigMap
+  - path: argocd-cm/apply-global-project-to-all-projects.patch.yaml
+  - path: argocd-cm/authenticate-with-google-workspace.patch.yaml
+  - path: argocd-cm/disable-admin-user-account.patch.yaml
+  - path: argocd-cm/enable-helm-with-kustomize.patch.yaml
+  - path: argocd-cm/set-url.patch.yaml
+  - path: argocd-cm/track-resources-using-annotation.patch.yaml
+
+  # Patches for argocd-cmd-params-cm ConfigMap
+  - path: argocd-cmd-params-cm/disable-http-to-https-redirection.patch.yaml
+
+  # Patches for argocd-rbac-cm ConfigMap
+  - path: argocd-rbac-cm/grant-all-users-admin-privileges.patch.yaml
+
+  # Patches for ServiceAccounts to use Workload Identity
+  - path: argocd-workload-identity/use-workload-identity-for-argocd-application-controller.patch.yaml
+  - path: argocd-workload-identity/use-workload-identity-for-argocd-server.patch.yaml

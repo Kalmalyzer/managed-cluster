@@ -1,0 +1,15 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+namespace: external-secrets
+
+resources:
+  # Create 'external-secrets' namespace
+  - external-secrets-namespace.yaml
+
+  # Install External Secrets Operator, including CRDs
+  - application
+
+patches:
+
+  # Use Workload Identity for External Secrets Operator
+  - path: use-workload-identity-for-external-secrets.patch.yaml
