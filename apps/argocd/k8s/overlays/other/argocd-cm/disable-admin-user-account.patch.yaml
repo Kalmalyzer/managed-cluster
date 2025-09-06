@@ -1,8 +1,0 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: argocd-cm
-data:
-  # Disable admin user account
-  # This will allow only OIDC authentication, and authentication using any local accounts that have been created post-creation time
-  admin.enabled: "false"
