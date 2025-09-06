@@ -5,7 +5,7 @@ metadata:
   namespace: argocd
 spec:
   destination:
-    name: talos-default
+    name: gke
     namespace: cluster-resources
 
   source:
