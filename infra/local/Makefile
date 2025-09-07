@@ -8,10 +8,10 @@ activate:
 
 install-local-secret-store:
 	kubectl config use-context $(KUBECTL_CONTEXT_NAME)
-	kubectl apply -k apps/local-secret-store
+	kubectl apply -k ../../apps/local-secret-store
 
 export-local-secrets:
-	kubectl get secret -n local-secret-store -o yaml > local-secrets.yaml
+	kubectl get secret -n local-secret-store -o yaml > ../../local-secrets.yaml
 
 import-local-secrets:
-	kubectl apply -f local-secrets.yaml
+	kubectl apply -f ../../local-secrets.yaml
