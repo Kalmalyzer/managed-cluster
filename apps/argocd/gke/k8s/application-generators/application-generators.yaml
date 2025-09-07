@@ -18,4 +18,4 @@ spec:
       namespace: argocd
 
   # Provide a shortlist of cluster-scope resources that are allowed; by default, none are allowed
-  clusterResourceWhitelist:
+  # clusterResourceWhitelist:
