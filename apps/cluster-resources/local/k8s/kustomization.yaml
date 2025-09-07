@@ -3,3 +3,7 @@ kind: Kustomization
 
 resources:
   - cluster-resources-namespace.yaml
+
+  # Instoll a simple storage provider for local (single-node) use
+  # This storage provider will be the default storage class for the cluster
+  - local-path-storage

@@ -1,0 +1,50 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  # Install local-path-provisioner
+  - github.com/rancher/local-path-provisioner/deploy?ref=v0.0.32
+
+patches:
+
+  # Allow privileged pods within this namespace
+  # We need to relaxe from the typical "baseline" level settings
+  #  beause the local-path-provisioner pod needs to run as root
+  - patch: |-
+      apiVersion: v1
+      kind: Namespace
+      metadata:
+        name: local-path-storage
+        labels:
+          pod-security.kubernetes.io/enforce: privileged
+          pod-security.kubernetes.io/warn: privileged
+
+  # Add SecurityContext to the local-path-provisioner container
+  # The original manifest lacks security context settings
+  #   and clashes with Talos's default security settings
+  - patch: |-
+      apiVersion: apps/v1
+      kind: Deployment
+      metadata:
+        name: local-path-provisioner
+        namespace: local-path-storage
+      spec:
+        template:
+          spec:
+            containers:
+              - name: local-path-provisioner
+                securityContext:
+                  allowPrivilegeEscalation: false
+                  capabilities:
+                    drop: ["ALL"]
+                  runAsNonRoot: false
+                  seccompProfile:
+                    type: RuntimeDefault
+
+  # Set local-path-provisioner as the default storage class
+  - patch: |-
+      apiVersion: storage.k8s.io/v1
+      kind: StorageClass
+      metadata:
+        name: local-path
+        annotations:
+          storageclass.kubernetes.io/is-default-class: "true"
