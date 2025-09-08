@@ -101,6 +101,11 @@ static_regional_ip_addresses = [
     region = "europe-west1",
   },
 
+  # This address is used by the TCP load balancer used by our P4 service
+  {
+    id     = "p4-ip",
+    region = "europe-west1",
+  },
 ]
 
 iap_accessors = [
