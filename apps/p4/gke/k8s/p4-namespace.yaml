@@ -1,0 +1,17 @@
+# Create p4 namespace
+# The p4 server will reside within this namespace
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false
+  creationTimestamp: null
+  name: p4
+  labels:
+    # Allow privileged pods within this namespace
+    # We need to relaxe from the typical "baseline" level settings
+    #  because we need to chown/chmod the /ssl folder that we mount
+    #  and it is normally owned by root
+    pod-security.kubernetes.io/enforce: privileged
+    pod-security.kubernetes.io/warn: privileged

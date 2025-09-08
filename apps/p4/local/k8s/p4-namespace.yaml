@@ -1,0 +1,10 @@
+# Create p4 namespace
+# The p4 server will reside within this namespace
+
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations:
+    argocd.argoproj.io/sync-options: Prune=false
+  creationTimestamp: null
+  name: p4

@@ -1,0 +1,135 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: p4
+spec:
+  serviceName: p4
+  replicas: 1
+  selector:
+    matchLabels:
+      app: p4
+  template:
+    metadata:
+      labels:
+        app: p4
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      containers:
+        - name: p4
+          image: p4:local
+          env:
+            - name: P4PORT
+              value: "ssl:1666"
+            - name: P4NAME
+              value: "p4.kalms.org"
+          ports:
+            - containerPort: 1666
+              name: p4port
+          volumeMounts:
+            - name: serverdata
+              mountPath: /metadata
+            - name: serverlibrary
+              mountPath: /library
+            - name: serverjournals
+              mountPath: /journals
+            - name: servercheckpoints
+              mountPath: /checkpoints
+            - name: ssl
+              mountPath: /ssl
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+      volumes:
+        - name: serverdata
+          persistentVolumeClaim:
+            claimName: serverdata
+        - name: serverlibrary
+          persistentVolumeClaim:
+            claimName: serverlibrary
+        - name: serverjournals
+          persistentVolumeClaim:
+            claimName: serverjournals
+        - name: servercheckpoints
+          persistentVolumeClaim:
+            claimName: servercheckpoints
+        - name: ssl
+          persistentVolumeClaim:
+            claimName: ssl
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: p4
+spec:
+  selector:
+    app: p4
+  ports:
+    - protocol: TCP
+      port: 1666
+      targetPort: 1666
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: serverdata
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: serverlibrary
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: serverjournals
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: servercheckpoints
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ssl
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

@@ -1,0 +1,22 @@
+# Project for p4
+
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: p4
+spec:
+  description: p4 project
+
+  sourceRepos:
+    # Only allow fetching configuration from the primary Git repo
+    - https://github.com/kalmalyzer/managed-cluster.git
+
+  destinations:
+    # Only allow deploying to the 'p4' namespace within the cluster
+    - name: in-cluster
+      namespace: p4
+
+  # Provide a shortlist of cluster-scope resources that are allowed; by default, none are allowed
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: Namespace

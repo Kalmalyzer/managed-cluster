@@ -1,0 +1,174 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: p4
+spec:
+  serviceName: p4
+  replicas: 1
+  selector:
+    matchLabels:
+      app: p4
+  template:
+    metadata:
+      labels:
+        app: p4
+    spec:
+      securityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      
+      initContainers:
+        - name: fix-folder-ownership
+          image: alpine:3
+          # p4d requires that the /ssl folder is owned by the `perforce` user, and have 700 permissions
+          # It also expects the /metadata, /library, /journals, /backup folders to be owend by `perforce` but does not validate/enforce this
+          #
+          # When mounting a volume in Kubernetes, the volume is owned by root:root by default and given 777 permissions
+          # The group ownership can be overridden by setting the `fsGroup` field in the pod spec
+          # However, there is no way to override the user ownership, or the permissions
+          # Therefore we fix up these manually via an init container
+          command: ["sh", "-c"]
+          args: 
+            - |
+              chown 100:101 /metadata /library /journals /backup /ssl
+              chmod 700 /ssl
+          volumeMounts:
+            - name: serverdata
+              mountPath: /metadata
+            - name: serverlibrary
+              mountPath: /library
+            - name: serverjournals
+              mountPath: /journals
+            - name: serverbackup
+              mountPath: /backup
+            - name: ssl
+              mountPath: /ssl
+          securityContext:
+            # The init container needs to run as root to be able to change the ownership of root-owned folders
+            runAsNonRoot: false
+            runAsUser: 0
+            privileged: true
+
+      containers:
+        - name: p4
+          image: europe-west1-docker.pkg.dev/kalms-managed-cluster/container-images/p4:test7
+          env:
+            - name: P4PORT
+              value: "ssl:1666"
+            - name: P4NAME
+              value: "p4.kalms.org"
+          ports:
+            - containerPort: 1666
+              name: p4port
+          volumeMounts:
+            - name: serverdata
+              mountPath: /metadata
+            - name: serverlibrary
+              mountPath: /library
+            - name: serverjournals
+              mountPath: /journals
+            - name: serverbackup
+              mountPath: /backup
+            - name: ssl
+              mountPath: /ssl
+          securityContext:
+            # The p4 image has a user/group specified. However that user/group happens to be specified by name rather than UID/GID in the Dockerfile
+            # The validation for runAsNonRoot requires that the user/group be specified by UID/GID, since the validation happens before the container starts,
+            #   and name->ID mapping is done via /etc/passwd and /etc/groups within the container
+            # Therefore we manually force the UID/GID here
+            runAsUser: 100
+            runAsGroup: 101
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+      volumes:
+        - name: serverdata
+          persistentVolumeClaim:
+            claimName: serverdata
+        - name: serverlibrary
+          persistentVolumeClaim:
+            claimName: serverlibrary
+        - name: serverjournals
+          persistentVolumeClaim:
+            claimName: serverjournals
+        - name: serverbackup
+          persistentVolumeClaim:
+            claimName: serverbackup
+        - name: ssl
+          persistentVolumeClaim:
+            claimName: ssl
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: p4
+spec:
+  selector:
+    app: p4
+  ports:
+    - protocol: TCP
+      port: 1666
+      targetPort: 1666
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: serverdata
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: serverlibrary
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: serverjournals
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: serverbackup
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 5Gi
+
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: ssl
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi

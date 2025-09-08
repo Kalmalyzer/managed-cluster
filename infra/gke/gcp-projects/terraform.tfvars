@@ -15,6 +15,7 @@ app_folder = "kalms-managed-cluster-apps"
 
 app_projects = [
   # Create GCP projects + associated buckets for Terraform state with the following names
-  "kalms-external-secrets",
   "kalms-argocd",
+  "kalms-external-secrets",
+  "kalms-p4",
 ]
