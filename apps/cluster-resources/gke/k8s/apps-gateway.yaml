@@ -28,7 +28,8 @@ spec:
       port: 80
       allowedRoutes:
         kinds:
-          - kind: HTTPRoute
+          - group: gateway.networking.k8s.io
+            kind: HTTPRoute
 
         # Only allow HTTPRoutes that are in namespaces that have the 'shared-gateway-access' label to refer to this gateway
         namespaces:
