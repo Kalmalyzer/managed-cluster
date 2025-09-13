@@ -5,7 +5,9 @@ metadata:
   name: argocd-server-http-to-https-redirect
 spec:
   parentRefs:
-    - name: apps
+    - group: gateway.networking.k8s.io	
+      kind: Gateway
+      name: apps
       namespace: cluster-resources
       sectionName: http
   hostnames:
@@ -16,3 +18,9 @@ spec:
         - type: RequestRedirect
           requestRedirect:
             scheme: https
+            statusCode: 302
+      matches:	
+        - path:	
+            type: PathPrefix	
+            value: /
+  
