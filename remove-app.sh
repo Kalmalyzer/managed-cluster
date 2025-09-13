@@ -20,8 +20,8 @@ if [[ -z "${APP_ROOT_DIR}" ]]; then
   exit 1
 fi
 
-# ENV is provided as an environment variable, or defaults to "local"
-ENV="${ENV:-local}"
+# ENV is either provided as an environment variable, or set to the default setting from environments.yaml
+ENV="${ENV:-$(yq .default < environments.yaml)}"
 
 # Ensure that ENV is valid by looking up environments.yaml
 if ! yq ".${ENV}" environments.yaml > /dev/null 2>&1; then

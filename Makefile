@@ -5,11 +5,12 @@
 .PHONY: restart-argocd-server restart-argocd-application-controller restart-argocd-dex-server
 .PHONY: port-forward-argocd-server get-admin-password
 
-# Check if ENV is set and valid
+# If ENV is not set, then apply the default setting from environments.yaml
 ifeq ($(strip $(ENV)),)
-ENV:=local
+ENV:=$(shell yq .default < environments.yaml)
 endif
 
+# Ensure that ENV is valid
 VALID_ENVS := $(shell yq 'keys | .[]' environments.yaml)
 ENV_VALID := $(filter $(ENV),$(VALID_ENVS))
 ifeq ($(strip $(ENV_VALID)),)

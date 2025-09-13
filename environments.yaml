@@ -1,7 +1,13 @@
+# Default environment to use, if ENV is not set when invoking make & helper scripts
+# This should refer to one of the other sections in this file
+default: local
+
+# Local cluster, running on Talos in a couple of Docker containers on the local workstation
 local:
   kubectlContextName: admin@talos-default
   clusterName: talos-default
 
+# Cluster deployed to GKE on Google Cloud
 gke:
   kubectlContextName: gke_kalms-managed-cluster_europe-west1_managed-cluster
   clusterName: managed-cluster
