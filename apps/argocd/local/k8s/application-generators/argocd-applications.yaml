@@ -10,23 +10,49 @@ metadata:
     app.kubernetes.io/name: argocd-applications
   name: argocd-applications
   namespace: argocd
+
+# Reference: https://argo-cd.readthedocs.io/en/latest/user-guide/application-specification/
 spec:
+
+  # Cluster + namespace where the application will be deployed
   destination:
     name: in-cluster
     namespace: argocd
+
+  # Ignore these differences between live and desired states during the diff. Note that these configurations are not
   ignoreDifferences:
     - group: argoproj.io
       jsonPointers:
+        # Status keeps changing, and is not relevant to the application's desired deployment state
         - /status
       kind: Application
+
+  # The project that this application belongs to
   project: application-generators
+
+  # Git repository + path containing the application's desired state in the form of resource manifests
   source:
     path: apps-config/local/applications
     repoURL: https://github.com/kalmalyzer/managed-cluster.git
+
   syncPolicy:
+
+    # Automatically sync the application's resources when a diff is detected
+    # Reference: https://argo-cd.readthedocs.io/en/latest/user-guide/auto_sync/#automated-sync-policy
     automated:
+      # Allow sync to occur, even if the target application declares no resources
+      # Reference: https://argo-cd.readthedocs.io/en/latest/user-guide/auto_sync/#automatic-pruning-with-allow-empty-v18
       allowEmpty: true
+      # Allow sync to delete resources
+      # Reference: https://argo-cd.readthedocs.io/en/latest/user-guide/auto_sync/#automatic-pruning
       prune: true
+      # Trigger sync when changes to the live cluster are detected, not just when there are changes in the Git repo
+      # The intention of this is to automatically detect and correct any drift that might have occurred
+      # Reference: https://argo-cd.readthedocs.io/en/latest/user-guide/auto_sync/#automatic-self-healing
       selfHeal: true
+
+    # Reference: https://argo-cd.readthedocs.io/en/latest/user-guide/sync-options/#sync-options
     syncOptions:
-      - allowEmpty=true
+      # Enable server-side apply for all resources within the application
+      # Reference: https://argo-cd.readthedocs.io/en/latest/user-guide/sync-options/#server-side-apply
+      - ServerSideApply=true

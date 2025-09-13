@@ -9,6 +9,7 @@ metadata:
   labels:
     app.kubernetes.io/name: argocd
   name: argocd
+
 spec:
   # Deploy the application to specified cluster/namespace
   destination:
@@ -44,6 +45,12 @@ spec:
       # Allow automated syncs to be triggered by changes to the live cluster (this makes the application self-healing)
       # Reference: https://argo-cd.readthedocs.io/en/stable/user-guide/auto_sync/#automatic-self-healing
       selfHeal: true
+
+    # Reference: https://argo-cd.readthedocs.io/en/latest/user-guide/sync-options/#sync-options
+    syncOptions:
+      # Enable server-side apply for all resources within the application
+      # Reference: https://argo-cd.readthedocs.io/en/latest/user-guide/sync-options/#server-side-apply
+      - ServerSideApply=true
 
     # Set these labels/annotations on the application namespace
     # Reference: https://argocd.readthedocs.io/en/stable/user-guide/sync-options/#namespace-metadata

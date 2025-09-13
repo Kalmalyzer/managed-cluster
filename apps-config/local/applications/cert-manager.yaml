@@ -46,6 +46,12 @@ spec:
       # Reference: https://argo-cd.readthedocs.io/en/stable/user-guide/auto_sync/#automatic-self-healing
       selfHeal: true
 
+    # Reference: https://argo-cd.readthedocs.io/en/latest/user-guide/sync-options/#sync-options
+    syncOptions:
+      # Enable server-side apply for all resources within the application
+      # Reference: https://argo-cd.readthedocs.io/en/latest/user-guide/sync-options/#server-side-apply
+      - ServerSideApply=true
+
     # Set these labels/annotations on the application namespace
     # Reference: https://argo-cd.readthedocs.io/en/stable/user-guide/sync-options/#namespace-metadata
     managedNamespaceMetadata:
