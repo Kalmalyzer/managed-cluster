@@ -9,7 +9,7 @@ spec:
       namespace: cluster-resources
       sectionName: http
   hostnames:
-    - argocd.walkerlabs.com
+    - argocd.kalms.org
   rules:
     # Redirect incoming traffic on port 80 of the gateway to port 443 instead
     - filters:
