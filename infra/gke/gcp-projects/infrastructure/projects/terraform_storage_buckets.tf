@@ -1,7 +1,7 @@
 # Create a Storage bucket within each of the listed projects
 # The buckets are intended to contain Terraform state
 # Each individual project can then have a Terraform stack that expects the project + state bucket to already exist
-resource "google_storage_bucket" "app_project_state" {
+resource "google_storage_bucket" "project_state" {
 
   for_each = var.projects
 

@@ -1,4 +1,4 @@
-# Create a GCP folder which will contain all apps' projects
+# Create a GCP folder which will contain all managed projects
 resource "google_folder" "managed_folder" {
 
   # Folder name
@@ -9,9 +9,7 @@ resource "google_folder" "managed_folder" {
   # https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_folder#parent-1
   parent = "${local.parent.type}s/${local.parent.id}"
 
-  # Terraform is not allowed to delete this folder
+  # Terraform is allowed to delete this folder
   # Reference: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_folder#deletion_protection-1
-  deletion_protection = true
-
-  # TODO: consider adding a tag to this, which enables External Secret operator to get a role in the folder
+  deletion_protection = false
 }
