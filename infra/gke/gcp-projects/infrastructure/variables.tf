@@ -10,14 +10,18 @@ variable "billing_account" {
   type = string
 }
 
-variable "cluster_project" {
+variable "managed_folder" {
   type = string
 }
 
-variable "app_folder" {
-  type = string
+variable "projects" {
+  type = map(object({
+    terraform_state_bucket_id                = string
+    github_actions_workload_identity_pool_id = string
+    github_repository                        = string
+  }))
 }
 
-variable "app_projects" {
-  type = list(string)
+variable "github_organization" {
+  type = string
 }
