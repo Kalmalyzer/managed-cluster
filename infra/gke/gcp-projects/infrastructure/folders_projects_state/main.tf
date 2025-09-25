@@ -1,6 +1,6 @@
 
 # Retrieve ancestry of the '${prefix}-managed-gcp-projects' project
-# The managed cluster project and the apps folder will be created as sibling to this project
+# The managed cluster folder will be created as sibling to this project
 # Reference: https://registry.terraform.io/providers/hashicorp/google/latest/docs/data-sources/project_ancestry
 data "google_project_ancestry" "gcp_projects_ancestry" {
 }
@@ -16,7 +16,7 @@ locals {
   parent = data.google_project_ancestry.gcp_projects_ancestry.ancestors[1]
 }
 
-# Create a GCP folder which will contain all apps' projects
+# Create a GCP folder which will contain all managed projects
 resource "google_folder" "app_folder" {
 
   # Folder name
@@ -37,16 +37,19 @@ resource "google_folder" "app_folder" {
 locals {
   projects_and_folders = merge(
     {
-      # The "cluster project" will reside side-by-side with the "${prefix}-managed-gcp-projects" project
-      (var.cluster_project) = local.parent,
+      # The "cluster project" will reside within the folder
+      (var.cluster_project) = {
+        type : "folder",
+        id : google_folder.app_folder.id,
+      },
     },
     {
-      # All app projects will reside within the app folder
+      # All app projects will reside within the folder
       for app_project in var.app_projects :
-        app_project => {
-          type: "folder",
-          id: google_folder.app_folder.id,
-        }
+      app_project => {
+        type : "folder",
+        id : google_folder.app_folder.id,
+      }
     }
   )
 }
@@ -58,23 +61,23 @@ resource "google_project" "projects" {
 
   # Display name of project
   # Reference: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_project#name-1
-  name                = each.key
+  name = each.key
 
   # Project ID
   # Reference: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_project#project_id-1
-  project_id          = each.key
+  project_id = each.key
 
   # Alphanumeric ID of the billing account this project should be connected to
   # Reference: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_project#billing_account-1
-  billing_account     = var.billing_account
+  billing_account = var.billing_account
 
   # Numeric ID of the parent organization for this project, or null if it is supposed to be placed within a folder
   # Reference: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_project#org_id-1
-  org_id           = each.value.type == "organization" ? each.value.id : null
+  org_id = each.value.type == "organization" ? each.value.id : null
 
   # Numeric ID of the parent folder for this project, or null if it is supposed to be placed directly in an organization
   # Reference: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_project#folder_id-1
-  folder_id           = each.value.type == "folder" ? each.value.id : null
+  folder_id = each.value.type == "folder" ? each.value.id : null
 
   # Do not create default network in project
   # Reference: https://registry.terraform.io/providers/hashicorp/google/latest/docs/resources/google_project#auto_create_network-1

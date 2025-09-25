@@ -11,7 +11,7 @@ billing_account = "010A01-78BA4C-BE4C45"
 cluster_project = "kalms-managed-cluster"
 
 # Create GCP folder with this name; it will contain the GCP projects for all the apps
-app_folder = "kalms-managed-cluster-apps"
+app_folder = "kalms-managed-gcp-folder"
 
 app_projects = [
   # Create GCP projects + associated buckets for Terraform state with the following names
