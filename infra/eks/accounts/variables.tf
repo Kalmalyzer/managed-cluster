@@ -8,11 +8,6 @@ variable "managed_organizational_unit" {
 
 variable "accounts" {
   type = map(object({
-    email                     = string
-    terraform_state_bucket_id = string
+    email = string
   }))
-}
-
-variable "github_organization" {
-  type = string
 }

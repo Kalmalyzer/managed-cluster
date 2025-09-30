@@ -4,6 +4,8 @@
 # Reference: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/organizations_account
 resource "aws_organizations_account" "account" {
 
+  provider = aws.root
+
   for_each = var.accounts
 
   # Friendly name for account

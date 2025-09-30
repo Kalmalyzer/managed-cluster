@@ -1,0 +1,5 @@
+provider "aws" {
+  alias   = "{{ account }}"
+  region  = "{{ region }}"
+  profile = "Administrator-{{ account }}"
+}

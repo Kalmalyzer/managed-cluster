@@ -1,0 +1,5 @@
+# Ignore any local Terraform cache folders
+
+/.terraform
+
+terraform.tfvars.json

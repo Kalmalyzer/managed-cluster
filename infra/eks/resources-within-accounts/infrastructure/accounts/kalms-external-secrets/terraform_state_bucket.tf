@@ -5,11 +5,11 @@
 # Reference: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket
 resource "aws_s3_bucket" "account_state" {
 
-  for_each = var.accounts
+  provider = aws.kalms-external-secrets
 
   # Bucket name
   # Reference: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket#bucket-1
-  bucket = each.value.terraform_state_bucket_id
+  bucket = "kalms-external-secrets-state"
 
   # Attempts to delete the bucket will fail if the bucket contains any objects
   # Reference: https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket#force_destroy-1

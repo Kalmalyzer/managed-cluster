@@ -1,0 +1,8 @@
+
+{% for account in accounts -%}
+
+module "{{account}}" {
+  source = "./accounts/{{account}}"
+}
+
+{% endfor -%}
